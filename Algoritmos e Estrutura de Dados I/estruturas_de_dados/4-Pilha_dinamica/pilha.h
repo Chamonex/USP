@@ -9,17 +9,23 @@
 #define MAX 128
 
 typedef struct {
-	int e;
-	int *prox;
+	int chave;
+} t_elemento;
+
+typedef struct t_no *t_apontador;
+
+typedef struct t_no {
+	t_elemento e;
+	t_apontador prox;
 } t_no;
 
 typedef struct {
-	t_no *topo;		// cabeça
+	t_apontador topo;		// cabeça
 	int cont;
 } t_pilha;
 
 void inicializar(t_pilha *p);
-int push(int, t_pilha *p);
+int push(t_elemento e, t_pilha *p);
 int pop(t_pilha *p);
 int vazia(t_pilha p);
 int cheia(t_pilha p);

@@ -20,7 +20,7 @@ void inicializar(t_pilha *p) {
 }
 
 
-int push(int e, t_pilha *p) {
+int push(t_elemento e, t_pilha *p) {
     
     // insere novo nó
 
@@ -54,7 +54,7 @@ int pop(t_pilha *p) {
 
     p->cont--;
 
-    int e = p->topo->e;
+    int chave = p->topo->e.chave;
 
     t_no *aux;
     aux = p->topo;
@@ -62,7 +62,7 @@ int pop(t_pilha *p) {
 
     p->topo = aux->prox;
     
-    return e;
+    return chave;
 
 }
 
