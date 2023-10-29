@@ -11,53 +11,48 @@ void inicializar(t_skiplist *l) {
 
 }
 
-int pesquisar(int chave, t_skiplist *l) {
-    t_apontador p = l->header;
+static int criarChave(char nome[]) {
+
+    return (sizeof nome);
+
+}
+
+
+t_apontador buscarNo(char nome[], t_apontador p) {  
+
+    int chave = criarChave(nome);
 
     while (p != NULL) {
         if (p->e.chave == chave) {
-            printf("contatinho encontrado: telefone %d\n", p->e.telefone);
-            return SUCESSO;
-        }
-
-        if (p->prox->e.chave > chave) {
-            if (p->baixo == NULL) {
-                printf("Operacao invalida: contatinho nao encontrado\n");
-                return ERROR;
-            }
-            p = p->baixo;
-        }
-        else
-            p = p->prox;
-    }
-}
-
-static int criarChave(char nome[]) {
-    
-}
-
-
-static t_apontador buscarNo(char nome[], t_apontador p) {  
-
-    while (p != NULL) {
-        if (p->e.nome == nome) {
             return p;
         }
 
         if (p->prox->e.chave > chave) {
             if (p->baixo == NULL) {
-                printf("Operacao invalida: contatinho nao encontrado\n");
-                return ERROR;
+                printf("MUDDAR! .buscarNo -> nao encontrei o elemento para alterar!");
+                t_apontador erro = NULL;
+                return erro;
             }
             p = p->baixo;
         }
         else
             p = p->prox;
     }
+    
+    printf(".BuscarNo -> Operacao invalida: contatinho nao encontrado\n");
+    t_apontador erro = NULL;
+    return erro;
+
 }
 
 
 int alterar(char nome[], int tel, t_skiplist *l) {
     t_apontador p = l->header;
-    buscarNo(nome, p);
+    t_apontador alterar = buscarNo(nome, p);
+
+    if (alterar == NULL) {
+        printf("Nao encontrei\n");
+        return ERROR;
+    }
+
 }
