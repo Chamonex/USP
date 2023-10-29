@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "pilha.h"
 
 int main() {
@@ -6,19 +7,26 @@ int main() {
     t_pilha p;
     inicializar(&p);
 
-    push(20, &p);
-    push(30, &p);
-    push(40, &p);
-
-    while(p.topo >= 0)
-        printf("%d\n", pop(&p));
+    t_elemento e1;
+    e1.chave = 1;
+    t_elemento e2;
+    e2.chave = 2;
+    t_elemento e3;
+    e3.chave = 3;
     
-    printf("%d\n", pop(&p));
+    push(e1, &p);
+    
+    imprimir(p);
 
-    for (int i = 0; i <= MAX+1; i++) {
-        printf("%d\n", push(i, &p));
-    }
+    push(e2, &p);
+    push(e3, &p);
 
+    imprimir(p);
 
+    pop(&p);
+
+    imprimir(p);
+    
     return 0;
+
 }

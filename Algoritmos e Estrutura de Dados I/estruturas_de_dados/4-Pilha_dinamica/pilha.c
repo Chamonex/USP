@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "pilha.h"
 
 // typedef struct {
@@ -23,10 +24,6 @@ void inicializar(t_pilha *p) {
 int push(t_elemento e, t_pilha *p) {
     
     // insere novo nó
-
-    t_no *n;
-    n->e = e;
-
     if (cheia(*p) == CHEIA) {
         printf("PUSH -- pilha (memoria) esta cheia!");
         return CHEIA;
@@ -34,11 +31,12 @@ int push(t_elemento e, t_pilha *p) {
 
     p->cont++;
 
-    t_no *aux;
-    
-    aux = p->topo;
-    p->topo = n;
-    n->prox = aux;
+    t_apontador ponteiro = malloc(sizeof(t_no));
+    ponteiro->e = e;
+
+    t_apontador aux = p->topo;
+    p->topo = ponteiro;
+    ponteiro->prox = aux;
 
     return SUCESSO;
 
@@ -49,23 +47,29 @@ int pop(t_pilha *p) {
 
     if (vazia(*p) == VAZIA) {
         printf("A pilha esta vazia!\n");
-        return VAZIA;
+        return ERROR;
     }
 
-    p->cont--;
+    t_apontador aux;
+    aux = p->topo->prox;
 
-    int chave = p->topo->e.chave;
-
-    t_no *aux;
-    aux = p->topo;
     free(p->topo);
 
-    p->topo = aux->prox;
-    
-    return chave;
+    p->topo = aux;
+
+    return SUCESSO;
 
 }
 
+int cheia(t_pilha p) {
+
+    t_apontador a = malloc(sizeof(t_no));
+
+    if (a == NULL)
+        return CHEIA;
+    return SUCESSO;
+
+}
 
 int vazia(t_pilha p) {
 
@@ -85,7 +89,7 @@ int topo(t_pilha *p) {
         return VAZIA;
     }
 
-    return p->topo;
+    return p->topo->e.chave;
 
 }
 
@@ -94,5 +98,26 @@ int contar(t_pilha *p) {
 
     return p->cont;
 
+}
+
+
+void imprimir(t_pilha p) {
+    
+    if (vazia(p) == VAZIA) {
+        printf("pilha vazia, impossivel imprimir!\n");
+        return;
+    }
+
+    t_apontador ponteiro = p.topo;
+    printf("INICIO\n");
+
+    while(ponteiro != NULL) {
+        printf("%d\n", ponteiro->e.chave);
+        ponteiro = ponteiro->prox;
+    }
+
+    printf("FIM\n");
+
+    return;
 }
 
