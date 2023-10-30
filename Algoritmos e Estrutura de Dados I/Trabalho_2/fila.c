@@ -13,6 +13,7 @@ void inicializarF(t_fila *f) {
 
 int inserir(int chave, t_fila *f) {
     // inserir elemento no fim da fila
+    
     t_elemento_f e;
     e.chave = chave;
 
@@ -22,10 +23,10 @@ int inserir(int chave, t_fila *f) {
         return CHEIA;
     
     p->e = e;
-    f->cont++;
     p->anterior = NULL;
 
-    if(f->inicio == NULL) { //vazia
+    if(f->cont == 0) { 
+        f->cont++;
         p->prox = NULL;
         f->fim = p;
         f->inicio = p;
@@ -36,33 +37,27 @@ int inserir(int chave, t_fila *f) {
     t_apontador_f aux = f->fim;
     f->fim = p;
     p->prox = aux;
+    f->cont++;
     
     return SUCESSO;
 }
 
 
-int remover(int chave, t_fila *f) {
-    // remover um elemento do inicio da fila
-    // retorna a chave do elemento
-
-    if (vaziaF(*f) == VAZIA) {
-        return ERROR;
-    }
+int remover(int key, t_fila *f) {
     
-    if (f->inicio->e.chave != chave)
+    if (f->inicio->e.chave != key)
         return 1;
 
+    f->cont--;
     t_apontador_f aux = f->inicio;
     free(f->inicio);
     f->inicio = aux->anterior;
-    f->cont--;
-
     return 0;
 }
 
 
-int vaziaF(t_fila f) {
-    if (f.cont == 0)
+int vaziaF(t_fila *f) {
+    if (f->cont == 0)
         return VAZIA;
     
     return SUCESSO;
@@ -77,23 +72,6 @@ int cheiaF(t_fila f) {
     return SUCESSO;
 }
 
-
-int proximo(t_fila *f) {
-    
-    if (vaziaF(*f)) 
-        return VAZIA;
-
-    int chave = f->inicio->e.chave;
-    return chave;
-
-}
-
-
-int contarF(t_fila *f) {
-
-    return f->cont;
-
-}
 
 
 int printar(t_fila *f) {
@@ -113,3 +91,7 @@ int printar(t_fila *f) {
     printf("FIM\n");
 
 }
+
+// void limparF(t_fila *f) {
+    
+//}

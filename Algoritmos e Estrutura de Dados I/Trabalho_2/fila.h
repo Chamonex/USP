@@ -28,10 +28,9 @@ typedef struct {
 void inicializarF(t_fila *f);
 int inserir(int chave, t_fila *f);
 int remover(int chave, t_fila *f);
-int vaziaF(t_fila f);
+int vaziaF(t_fila *f);
 int cheiaF(t_fila f);
-int proximo(t_fila *f);
-int contarF(t_fila *f);
 int printar(t_fila *f);
+// void limparF(t_fila *f);
 
 #endif

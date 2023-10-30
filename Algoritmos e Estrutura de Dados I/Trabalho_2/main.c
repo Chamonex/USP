@@ -20,30 +20,36 @@
 */
 void main() {
 
-    int nTestes;
     t_pilha pilha;
     inicializar(&pilha);
     t_fila fila;
     inicializarF(&fila);
-    int erro_f = 0;
-    int erro_p = 0;
+    
+    int erro_f;
+    int erro_p;
+    int nTestes;
+    char opt;
+    int chave;
+    int n;
 
     scanf("%d", &nTestes);
 
     for (int i = 0; i < nTestes; i++) {
-        int n;
-        scanf("%d", &n);
-        getchar();
-        for (int j = 0; j < n; j++) {
-            char opt;
-            int chave;
 
-            opt = getc(stdin);
-            printf("%c\n", opt);
-            scanf("%d", &chave);
-            printf("%d\n", chave);
+        erro_f = 0;
+        erro_p = 0;
+        printf("--comeco--\n");
+        printf("\nERRO FILA: %d\n", erro_f);
+        printf("ERRO PILHA: %d\n", erro_p);
+
+        scanf("%d", &n);
+
+        for (int j = 0; j < n; j++) {
+
             getchar();
-            
+            opt = getc(stdin);
+            scanf("%d", &chave);
+  
             switch (opt)
             {
             case 'i':
@@ -59,15 +65,18 @@ void main() {
                 break;
             }
         }
+        printf("\nERRO FILA: %d\n", erro_f);
+        printf("ERRO PILHA: %d\n", erro_p);
 
-        if (erro_f != 0 && erro_p != 0)
+        if ((erro_f != 0) && (erro_p != 0))
             printf("impossivel\n");
-        else if (erro_f != 0 && erro_p == 0)
+        else if ((erro_f != 0) && (erro_p == 0))
             printf("pilha\n");
-        else if (erro_f == 0 && erro_p != 0)
+        else if ((erro_f == 0) && (erro_p != 0))
             printf("fila\n");
-        else if (erro_f == 0 && erro_p == 0)
+        else if ((erro_f == 0) && (erro_p == 0))
             printf("indefinido\n");
-
+        inicializar(&pilha);
+        inicializarF(&fila);
     }
 }

@@ -15,7 +15,6 @@ int push(int chave, t_pilha *p) {
     t_elemento e;
     e.chave = chave;
     
-    // insere novo nó
     if (cheia(*p) == CHEIA) {
         printf("PUSH -- pilha (memoria) esta cheia!");
         return CHEIA;
@@ -35,24 +34,21 @@ int push(int chave, t_pilha *p) {
 }
 
 
-int pop(int chave, t_pilha *p) {
+int pop(int key, t_pilha *p) {
 
-    if (vazia(*p) == VAZIA) {
-        return ERROR;
-    }
+    // if (vazia(*p) == VAZIA) {
+    //     return ERROR;
+    // }
 
-    if (p->topo->e.chave != chave)
-        return 1;
+    if (p->topo->e.chave != key)
+        return 1; //ERROR
 
     t_apontador aux;
     aux = p->topo->prox;
-
     free(p->topo);
-
     p->topo = aux;
 
-    return 0;
-
+    return 0; //SUCESSO
 }
 
 int cheia(t_pilha p) {
@@ -65,31 +61,13 @@ int cheia(t_pilha p) {
 
 }
 
+
 int vazia(t_pilha p) {
 
     if (p.cont == 0)
         return VAZIA;
         
     return SUCESSO;
-
-}
-
-
-
-int topo(t_pilha *p) {
-
-    if (vazia(*p) == VAZIA) {
-        return VAZIA;
-    }
-
-    return p->topo->e.chave;
-
-}
-
-
-int contar(t_pilha *p) {
-
-    return p->cont;
 
 }
 

@@ -28,8 +28,6 @@ int push(int chave, t_pilha *p);
 int pop(int chave, t_pilha *p);
 int vazia(t_pilha p);
 int cheia(t_pilha p);
-int topo(t_pilha *p);
-int contar(t_pilha *p);
 void imprimir(t_pilha p);
-
+// void limpar(t_pilha *p);
 #endif
