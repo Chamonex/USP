@@ -1,20 +1,27 @@
 #include <stdio.h>
-#include "pilha.h"
+#include <string.h>
+#include <stdlib.h>
 
-int main() {
+void main() {
 
-    /*
-    4
-    5 i 5 i 6 i 3 r 3 r 6
-    6 i 1 i 2 r 1 i 3 r 2 r 3
-    4 i 1 i 2 i 1 r 1
-    7 i 3 i 5 i 7 r 3 r 5 i 4 r 4
-    
-    pilha
-    fila
-    indefinido
-    impossive
-    */
+    int nTestes;
+    int i;
+    scanf("%d", &nTestes);
 
-    return 0;
+    for (i = 0; i < nTestes; i++) {
+        int n;
+        int j;
+        scanf("%d", &n);
+        for (j = 0; j < n; j++) {
+            char opt;
+            int e;
+
+            scanf("%c", &opt);
+            if (strcmp())
+        }
+
+    }
+
+
+
 }

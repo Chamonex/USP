@@ -6,7 +6,6 @@
 #define CHEIA -2
 #define VAZIA -3
 
-#define MAX 128
 
 typedef struct {
 	int chave;
@@ -17,20 +16,22 @@ typedef struct t_no *t_apontador;
 typedef struct t_no {
 	t_elemento e;
 	t_apontador prox;
+    t_apontador anterior;
 } t_no;
 
 typedef struct {
-	t_apontador topo;		// cabeça
+	t_apontador inicio;
+    t_apontador fim;
 	int cont;
-} t_pilha;
+} t_fila;
 
-void inicializar(t_pilha *p);
-int push(t_elemento e, t_pilha *p);
-int pop(t_pilha *p);
-int vazia(t_pilha p);
-int cheia(t_pilha p);
-int topo(t_pilha *p);
-int contar(t_pilha *p);
-void imprimir(t_pilha p);
+void inicializar(t_fila *f);
+int inserir(t_elemento e, t_fila *f);
+int remover(t_fila *f);
+int vazia(t_fila f);
+int cheia(t_fila f);
+int proximo(t_fila *f);
+int contar(t_fila *f);
+int printar(t_fila *f);
 
 #endif
