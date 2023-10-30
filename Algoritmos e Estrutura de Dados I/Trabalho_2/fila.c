@@ -2,17 +2,21 @@
 #include <stdlib.h>
 #include "fila.h"
 
-void inicializar(t_fila *f) {
+void inicializarF(t_fila *f) {
 
     f->cont = 0;
     f->fim = NULL;
     f->inicio = NULL;
 
 }
-int inserir(t_elemento e, t_fila *f) {
-    // inserir elemento no fim da fila
 
-    t_apontador p = malloc(sizeof(t_no));
+
+int inserir(int chave, t_fila *f) {
+    // inserir elemento no fim da fila
+    t_elemento_f e;
+    e.chave = chave;
+
+    t_apontador_f p = malloc(sizeof(t_no_f));
 
     if (p == NULL)
         return CHEIA;
@@ -29,36 +33,35 @@ int inserir(t_elemento e, t_fila *f) {
     }
 
     f->fim->anterior = p;
-    t_apontador aux = f->fim;
+    t_apontador_f aux = f->fim;
     f->fim = p;
     p->prox = aux;
     
-    printf("elemento inserido\n");
     return SUCESSO;
 }
 
 
-int remover(t_fila *f) {
+int remover(int chave, t_fila *f) {
     // remover um elemento do inicio da fila
     // retorna a chave do elemento
 
-    if (vazia(*f) == VAZIA) {
-        printf("REMOVER - fila vazia, impossivel remover!\n");
+    if (vaziaF(*f) == VAZIA) {
         return ERROR;
     }
     
-    int chave = f->inicio->e.chave;
+    if (f->inicio->e.chave != chave)
+        return 1;
 
-    t_apontador aux = f->inicio;
+    t_apontador_f aux = f->inicio;
     free(f->inicio);
     f->inicio = aux->anterior;
     f->cont--;
 
-    return chave;
+    return 0;
 }
 
 
-int vazia(t_fila f) {
+int vaziaF(t_fila f) {
     if (f.cont == 0)
         return VAZIA;
     
@@ -66,8 +69,8 @@ int vazia(t_fila f) {
 }
 
 
-int cheia(t_fila f) {
-    t_apontador teste = malloc(sizeof(t_no));
+int cheiaF(t_fila f) {
+    t_apontador_f teste = malloc(sizeof(t_no_f));
     if (teste == NULL)
         return CHEIA;
 
@@ -77,7 +80,7 @@ int cheia(t_fila f) {
 
 int proximo(t_fila *f) {
     
-    if (vazia(*f)) 
+    if (vaziaF(*f)) 
         return VAZIA;
 
     int chave = f->inicio->e.chave;
@@ -86,7 +89,7 @@ int proximo(t_fila *f) {
 }
 
 
-int contar(t_fila *f) {
+int contarF(t_fila *f) {
 
     return f->cont;
 
@@ -95,8 +98,7 @@ int contar(t_fila *f) {
 
 int printar(t_fila *f) {
     
-
-    t_apontador p = f->inicio;
+    t_apontador_f p = f->inicio;
     if (p == NULL) {
         printf("FILA VAZIA!\n");
         return ERROR;
@@ -109,5 +111,5 @@ int printar(t_fila *f) {
         p = p->anterior;
     }
     printf("FIM\n");
-}
 
+}

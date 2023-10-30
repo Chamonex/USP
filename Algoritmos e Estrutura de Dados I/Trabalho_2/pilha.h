@@ -6,7 +6,6 @@
 #define CHEIA -2
 #define VAZIA -3
 
-#define MAX 128
 
 typedef struct {
 	int chave;
@@ -25,8 +24,8 @@ typedef struct {
 } t_pilha;
 
 void inicializar(t_pilha *p);
-int push(t_elemento e, t_pilha *p);
-int pop(t_pilha *p);
+int push(int chave, t_pilha *p);
+int pop(int chave, t_pilha *p);
 int vazia(t_pilha p);
 int cheia(t_pilha p);
 int topo(t_pilha *p);

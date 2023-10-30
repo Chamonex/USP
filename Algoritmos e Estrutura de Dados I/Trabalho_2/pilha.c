@@ -2,16 +2,6 @@
 #include <stdlib.h>
 #include "pilha.h"
 
-// typedef struct {
-// 	int e;
-// 	int *prox;
-// } t_no;
-
-// typedef struct {
-// 	t_no *topo;		// cabeça
-// 	int cont;
-// } t_pilha;
-
 
 void inicializar(t_pilha *p) {
 
@@ -21,7 +11,9 @@ void inicializar(t_pilha *p) {
 }
 
 
-int push(t_elemento e, t_pilha *p) {
+int push(int chave, t_pilha *p) {
+    t_elemento e;
+    e.chave = chave;
     
     // insere novo nó
     if (cheia(*p) == CHEIA) {
@@ -43,12 +35,14 @@ int push(t_elemento e, t_pilha *p) {
 }
 
 
-int pop(t_pilha *p) {
+int pop(int chave, t_pilha *p) {
 
     if (vazia(*p) == VAZIA) {
-        printf("A pilha esta vazia!\n");
         return ERROR;
     }
+
+    if (p->topo->e.chave != chave)
+        return 1;
 
     t_apontador aux;
     aux = p->topo->prox;
@@ -57,7 +51,7 @@ int pop(t_pilha *p) {
 
     p->topo = aux;
 
-    return SUCESSO;
+    return 0;
 
 }
 
@@ -85,7 +79,6 @@ int vazia(t_pilha p) {
 int topo(t_pilha *p) {
 
     if (vazia(*p) == VAZIA) {
-        printf("vazia, nao tem topo!\n");
         return VAZIA;
     }
 
