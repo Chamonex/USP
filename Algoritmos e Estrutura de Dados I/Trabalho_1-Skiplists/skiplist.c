@@ -38,6 +38,30 @@ t_skiplist* inicializar(int max, float p) {
 }
 
 
+int busca(t_skiplist *l, int chave) {
+    if (l == NULL)
+        return ERROR;
+
+    t_no *atual = l->inicio;
+
+    for (int i = l->nivel; i >= 0; i--) {
+        while((atual->prox[i] != NULL)&&(atual->prox[i]->chave < chave)) {  // entender ! 
+
+            atual = atual->prox[i];
+
+        }
+    }
+
+    atual = atual->prox[0];
+
+    if(atual != NULL && atual->chave == chave)
+        return SUCESSO;
+
+    return ERROR;
+
+}
+
+
 void limpar(t_skiplist* l) {
     if (l == NULL)
         return;
@@ -54,5 +78,27 @@ void limpar(t_skiplist* l) {
 
     free(l->inicio);
     free(l);
+}
+
+
+
+int inserir(t_skiplist *l, int chave) {
+    if (l == NULL)
+        return ERROR;
+    
+    t_no *atual = l->inicio;
+    t_no **aux;
+    aux = malloc((l->nivelMax +1) * sizeof(t_no*));
+
+    for (int i = 0; i <= l->nivelMax; i++)
+        aux[i] = NULL;
+    
+    for (int i = l->nivel; i >= 0 ;i--) {
+        while (atual->prox[i] != NULL && atual->prox[i]->chave < chave)
+            atual = atual->prox[i];
+        
+        aux[i] = atual;
+    }
+
 }
 

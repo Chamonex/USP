@@ -21,7 +21,8 @@ typedef struct {
 } t_skiplist;
 
 t_skiplist* inicializar(int max, float p);
-void limpar(t_skiplist* l);
-
+int buscar(t_skiplist *l, int chave);
+void limpar(t_skiplist *l);
+int inserir(t_skiplist *l, int chave);)
 
 #endif
