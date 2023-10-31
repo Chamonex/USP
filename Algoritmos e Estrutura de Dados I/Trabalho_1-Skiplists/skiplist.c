@@ -1,58 +1,58 @@
 #include "skiplist.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
 
 
-void inicializar(t_skiplist *l) {
-    l->h = 0;
-    l->n = 0;
-    l->header = NULL;
+static t_no* novoNo(int chave, int nivel) {
 
-}
+    t_no* novo = malloc(sizeof(t_no));
 
-static int criarChave(char nome[]) {
-
-    return (sizeof nome);
-
-}
-
-
-t_apontador buscarNo(char nome[], t_apontador p) {  
-
-    int chave = criarChave(nome);
-
-    while (p != NULL) {
-        if (p->e.chave == chave) {
-            return p;
-        }
-
-        if (p->prox->e.chave > chave) {
-            if (p->baixo == NULL) {
-                printf("MUDDAR! .buscarNo -> nao encontrei o elemento para alterar!");
-                t_apontador erro = NULL;
-                return erro;
-            }
-            p = p->baixo;
-        }
-        else
-            p = p->prox;
-    }
-    
-    printf(".BuscarNo -> Operacao invalida: contatinho nao encontrado\n");
-    t_apontador erro = NULL;
-    return erro;
-
-}
-
-
-int alterar(char nome[], int tel, t_skiplist *l) {
-    t_apontador p = l->header;
-    t_apontador alterar = buscarNo(nome, p);
-
-    if (alterar == NULL) {
-        printf("Nao encontrei\n");
+    if (novo == NULL)   // memoria cheia
         return ERROR;
-    }
+
+    novo->chave = chave;
+    novo->prox = malloc((nivel+1) * sizeof(t_no*));
+
+    for (int i = 0; i <= nivel; i++)
+        novo->prox[i] = NULL;
+    
+    return novo;
 
 }
+
+
+t_skiplist* inicializar(int max, float p) {
+
+    t_skiplist* sk = (t_skiplist*) malloc(sizeof(t_skiplist));
+
+    if (sk == NULL)     // memoria cheia
+        return ERROR;
+
+    sk->nivelMax = max;
+    sk->p = p;
+    sk->nivel = 0;
+
+    sk->inicio = novoNo(-1, max);
+
+    return sk;
+}
+
+
+void limpar(t_skiplist* l) {
+    if (l == NULL)
+        return;
+    
+    t_no *no, *atual;
+    atual = l->inicio->prox[0];
+
+    while (atual != NULL) {
+        no = atual;
+        atual = atual->prox[0];
+        free(no->prox);
+        free(no);
+    }
+
+    free(l->inicio);
+    free(l);
+}
+
