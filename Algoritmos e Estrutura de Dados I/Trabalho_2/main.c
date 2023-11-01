@@ -38,9 +38,6 @@ void main() {
 
         erro_f = 0;
         erro_p = 0;
-        printf("--comeco--\n");
-        printf("\nERRO FILA: %d\n", erro_f);
-        printf("ERRO PILHA: %d\n", erro_p);
 
         scanf("%d", &n);
 
@@ -65,8 +62,6 @@ void main() {
                 break;
             }
         }
-        printf("\nERRO FILA: %d\n", erro_f);
-        printf("ERRO PILHA: %d\n", erro_p);
 
         if ((erro_f != 0) && (erro_p != 0))
             printf("impossivel\n");

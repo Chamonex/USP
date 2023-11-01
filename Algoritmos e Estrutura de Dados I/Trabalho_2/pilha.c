@@ -92,3 +92,6 @@ void imprimir(t_pilha p) {
     return;
 }
 
+
+// void limpar(t_pilha *p);
+
