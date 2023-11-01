@@ -1,5 +1,5 @@
 all:
-	gcc -o programa.exe main.c pilha.c fila.c
+	gcc -o programa main.c fila.c pilha.c
 
 run:
-	programa.exe
+	./programa
