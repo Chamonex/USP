@@ -35,7 +35,7 @@ static struct t_no* novoNo(int chave, int nivel) {
 static int sorteiaNivel(t_skiplist *l){
     
     srand((unsigned)time(NULL)); // alimentando o rand com a seed time
-	float r = (float)rand()/RAND_MAX;
+	float r = (float)rand()/RAND_MAX;   // numero de zero a um
 	int nivel = 0;
 	
     while(r < l->p && nivel < l->nivelMax){
@@ -171,50 +171,48 @@ int inserir(t_skiplist *l, int chave) {
 
     int sort = sortBin();
 
-    if (atual == NULL && sort) { 
-        // se for o ultimo elemento 
-        // e for sorteado (50%)
-        // tem que sortear o nivel nível
-        
-        int novo_nivel = sorteiaNivel(l);
+ 
+    // se for o ultimo elemento
+    // e for sorteado (50%)
+    // tem que sortear o nivel nível
+    
+    int novo_nivel = sorteiaNivel(l);
 
-        struct t_no *novo = novoNo(chave, novo_nivel);
+    struct t_no *novo = novoNo(chave, novo_nivel);
 
-        if (novo->e.chave == -1) {
-            // memoria cheia
-            free(aux);
-            return ERROR;
-        }
-
-        if (novo_nivel > l->nivel) {
-            // aumentar o nivel da skiplist
-            for (int i = l->nivel+1; i <= novo_nivel; i++)
-                aux[i] = l->inicio;
-            
-            l->nivel = novo_nivel;
-        }
-
-        for (int i = 0; i <= novo_nivel; i++) {
-            // inserir elemento
-            novo->prox[i] = aux[i]->prox[i];
-            aux[i]->prox[i] = novo;
-        }
-
+    if (novo->e.chave == -1) {
+        // memoria cheia
         free(aux);
-        return SUCESSO;
+        return ERROR;
     }
+
+    if (novo_nivel > l->nivel) {
+        // aumentar o nivel da skiplist
+        for (int i = l->nivel+1; i <= novo_nivel; i++)
+            aux[i] = NULL;     
+            // aux[i] = l->inicio; // nao seria melhor apontar para NULL? ----------
+        
+        l->nivel = novo_nivel;
+    }
+
+    for (int i = 0; i <= novo_nivel; i++) {
+        // inserir elemento
+        novo->prox[i] = aux[i]->prox[i];
+        aux[i]->prox[i] = novo;
+    }
+
+    free(aux);
+    return SUCESSO;
+
 }
 
 
 int remover(t_skiplist *l, int chave){
     
-    if (l = NULL)
-        return ERROR;
-    
-    t_no *atual = l->inicio;
+    struct t_no *atual = l->inicio;
 
-    t_no **aux;
-    aux = malloc((l->nivelMax+1) * sizeof(t_no*));
+    struct t_no **aux;
+    aux = malloc((l->nivelMax+1) * sizeof(struct t_no*));
 
     for (int i = 0; i <= l->nivelMax; i++) 
         aux[i] = NULL;
