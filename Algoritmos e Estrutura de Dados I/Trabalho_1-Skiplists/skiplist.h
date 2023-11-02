@@ -13,16 +13,16 @@ typedef struct {
 
 // typedef struct t_no t_apontador;
 
-typedef struct t_no {
+struct t_no{
     t_elemento e;
-    t_no **prox; 
-} t_no;
+    struct t_no **prox;
+};
 
 typedef struct {
     int nivelMax;  
-    float p;        // fração dos nós
-    int nivel;      // nivel atual
-    t_no *inicio;
+    float p;        // fração dos nós ??? -------------
+    int nivel;      // maior nivel atual
+    struct t_no *inicio ;
 } t_skiplist;
 
 t_skiplist* inicializar(int max, float p);
