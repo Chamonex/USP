@@ -81,7 +81,6 @@ void limpar(t_skiplist* l) {
 }
 
 
-
 int inserir(t_skiplist *l, int chave) {
     if (l == NULL)
         return ERROR;
@@ -100,5 +99,79 @@ int inserir(t_skiplist *l, int chave) {
         aux[i] = atual;
     }
 
+    atual = atual->prox[0];
+
+    if (atual == NULL || atual->chave != chave) {
+        int novo_nivel = sorteiaNivel(l);
+
+        t_no *novo = novoNo(chave, novo_nivel);
+
+        if (novo = NULL) {
+            free(aux);
+            return ERROR;
+        }
+
+        if (novo_nivel > l->nivel) {
+            for (int i = l->nivel+1; i <= novo_nivel; i++)
+                aux[i] = l->inicio;
+            
+            l->nivel = novo_nivel;
+        }
+
+        for (int i = 0; i <= novo_nivel; i++) {
+            novo->prox[i] = aux[i]->prox[i];
+            aux[i]->prox[i] = novo;
+        }
+
+        free(aux);
+        return SUCESSO;
+
+    }
 }
+
+
+int remover(t_skiplist *l, int chave){
+    
+    if (l = NULL)
+        return ERROR;
+    
+    t_no *atual = l->inicio;
+
+    t_no **aux;
+    aux = malloc((l->nivelMax+1) * sizeof(t_no*));
+
+    for (int i = 0; i <= l->nivelMax; i++) 
+        aux[i] = NULL;
+
+    for (int i = l->nivel; i >= 0; i--) {
+        while (atual->prox[i] != NULL && atual->prox[i]->chave < chave) 
+            atual = atual->prox[i];
+        
+        aux[i] = atual;
+    }
+
+    atual = atual->prox[0];
+
+    if (atual != NULL && atual->chave == chave) {
+
+        for(int i = 0; i <= l->nivel; i++) {
+            if (aux[i]->prox[i] != atual)
+                break;
+            aux[i]->prox[i] != atual->prox[i];
+        }
+
+        while(l->nivel > 0 && l->inicio->prox[l->nivel] == NULL)
+			l->nivel--;
+        
+        free(atual->prox);
+        free(atual);
+        free(aux);
+
+        return SUCESSO;
+    }
+
+    free(aux);
+    return ERROR;
+}
+
 

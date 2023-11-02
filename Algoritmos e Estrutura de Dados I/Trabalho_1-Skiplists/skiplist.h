@@ -5,7 +5,11 @@
 #define ERROR -1;
 
 
-// t_elemento
+typedef struct {
+    int chave;
+    char nome[20];
+    int tel;
+} t_elemento;
 
 
 typedef struct t_no {
@@ -24,5 +28,7 @@ t_skiplist* inicializar(int max, float p);
 int buscar(t_skiplist *l, int chave);
 void limpar(t_skiplist *l);
 int inserir(t_skiplist *l, int chave);
+int remover(t_skiplist *l, int chave);
+int alterar(t_skiplist *l, )
 
 #endif
