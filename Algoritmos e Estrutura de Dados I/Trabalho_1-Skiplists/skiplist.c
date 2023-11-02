@@ -3,29 +3,13 @@
 #include <stdlib.h>
 
 
-t_skiplist* inicializar(int max, float p) {
-
-    t_skiplist* sk = (t_skiplist*) malloc(sizeof(t_skiplist));
-
-    if (sk == NULL)     // memoria cheia
-        return ERROR;
-
-    sk->nivelMax = max;
-    sk->p = p;
-    sk->nivel = 0;
-
-    sk->inicio = novoNo(-1, max);
-
-    return sk;
-}
-
-
 static t_no* novoNo(int chave, int nivel) {
 
-    t_no* novo = malloc(sizeof(t_no));
+    t_no *novo = malloc(sizeof(t_no));
 
     if (novo == NULL)   // memoria cheia
-        return ERROR;
+        novo->e.chave == -1;
+        return novo;
 
 
     // trocar chave por NOME
@@ -41,7 +25,55 @@ static t_no* novoNo(int chave, int nivel) {
 }
 
 
-int busca(t_skiplist *l, int chave) {
+static int sorteiaNivel(t_skiplist *l){
+    
+	float r = (float)rand()/RAND_MAX;
+	int nivel = 0;
+	
+    while(r < l->p && nivel < l->nivelMax){
+		nivel++;
+		r = (float)rand()/RAND_MAX;
+	}
+
+	return nivel;
+}
+
+
+static int obterChave(char nome[]) {
+    int c = nome[0];
+    int cont = 1;
+    int chave = 0;
+
+    // funciona somente para letras minusculas
+    while (c > 96 && c < 123) {
+        chave += (c-96) * cont;
+        cont++;
+        c = nome[cont-1];
+    }
+
+    return chave;    
+}
+
+
+t_skiplist* inicializar(int max, float p) {
+
+    t_skiplist *l = (t_skiplist*) malloc(sizeof(t_skiplist));
+
+    if (l == NULL)     // memoria cheia
+        l->inicio->e.chave = -1;
+        return l;
+
+    l->nivelMax = max;
+    l->p = p;
+    l->nivel = 0;
+
+    l->inicio = novoNo(-1, max);
+
+    return l;
+}
+
+
+int pesquisar(t_skiplist *l, int chave) {
     if (l == NULL)
         return ERROR;
 
@@ -176,4 +208,10 @@ int remover(t_skiplist *l, int chave){
     return ERROR;
 }
 
+
+int alterar(t_skiplist *l, char *nome, int novo_tel) {
+
+
+
+}
 

@@ -1,8 +1,8 @@
 #ifndef SKIPLIST_H
 #define SKIPLIST_H
 
-#define SUCESSO 1;
-#define ERROR -1;
+#define SUCESSO 1
+#define ERROR -1
 
 
 typedef struct {
@@ -11,6 +11,7 @@ typedef struct {
     int tel;
 } t_elemento;
 
+// typedef struct t_no t_apontador;
 
 typedef struct t_no {
     t_elemento e;
@@ -25,10 +26,10 @@ typedef struct {
 } t_skiplist;
 
 t_skiplist* inicializar(int max, float p);
-int buscar(t_skiplist *l, int chave);
+int pesquisar(t_skiplist *l, int chave);
 void limpar(t_skiplist *l);
 int inserir(t_skiplist *l, int chave);
 int remover(t_skiplist *l, int chave);
-int alterar(t_skiplist *l, )
+int alterar(t_skiplist *l, char *nome, int novo_tel);
 
 #endif
