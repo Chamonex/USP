@@ -3,24 +3,6 @@
 #include <stdlib.h>
 
 
-static t_no* novoNo(int chave, int nivel) {
-
-    t_no* novo = malloc(sizeof(t_no));
-
-    if (novo == NULL)   // memoria cheia
-        return ERROR;
-
-    novo->chave = chave;
-    novo->prox = malloc((nivel+1) * sizeof(t_no*));
-
-    for (int i = 0; i <= nivel; i++)
-        novo->prox[i] = NULL;
-    
-    return novo;
-
-}
-
-
 t_skiplist* inicializar(int max, float p) {
 
     t_skiplist* sk = (t_skiplist*) malloc(sizeof(t_skiplist));
@@ -38,6 +20,27 @@ t_skiplist* inicializar(int max, float p) {
 }
 
 
+static t_no* novoNo(int chave, int nivel) {
+
+    t_no* novo = malloc(sizeof(t_no));
+
+    if (novo == NULL)   // memoria cheia
+        return ERROR;
+
+
+    // trocar chave por NOME
+    novo->e.chave = chave;
+    // criar CHAVE
+    novo->prox = malloc((nivel+1) * sizeof(t_no*));
+
+    for (int i = 0; i <= nivel; i++)
+        novo->prox[i] = NULL;
+    
+    return novo;
+
+}
+
+
 int busca(t_skiplist *l, int chave) {
     if (l == NULL)
         return ERROR;
@@ -45,7 +48,7 @@ int busca(t_skiplist *l, int chave) {
     t_no *atual = l->inicio;
 
     for (int i = l->nivel; i >= 0; i--) {
-        while((atual->prox[i] != NULL)&&(atual->prox[i]->chave < chave)) {  // entender ! 
+        while((atual->prox[i] != NULL)&&(atual->prox[i]->e.chave < chave)) {  // entender ! 
 
             atual = atual->prox[i];
 
@@ -54,7 +57,7 @@ int busca(t_skiplist *l, int chave) {
 
     atual = atual->prox[0];
 
-    if(atual != NULL && atual->chave == chave)
+    if(atual != NULL && atual->e.chave == chave)
         return SUCESSO;
 
     return ERROR;
@@ -93,7 +96,7 @@ int inserir(t_skiplist *l, int chave) {
         aux[i] = NULL;
     
     for (int i = l->nivel; i >= 0 ;i--) {
-        while (atual->prox[i] != NULL && atual->prox[i]->chave < chave)
+        while (atual->prox[i] != NULL && atual->prox[i]->e.chave < chave)
             atual = atual->prox[i];
         
         aux[i] = atual;
@@ -101,7 +104,7 @@ int inserir(t_skiplist *l, int chave) {
 
     atual = atual->prox[0];
 
-    if (atual == NULL || atual->chave != chave) {
+    if (atual == NULL || atual->e.chave != chave) {
         int novo_nivel = sorteiaNivel(l);
 
         t_no *novo = novoNo(chave, novo_nivel);
@@ -125,7 +128,6 @@ int inserir(t_skiplist *l, int chave) {
 
         free(aux);
         return SUCESSO;
-
     }
 }
 
@@ -144,7 +146,7 @@ int remover(t_skiplist *l, int chave){
         aux[i] = NULL;
 
     for (int i = l->nivel; i >= 0; i--) {
-        while (atual->prox[i] != NULL && atual->prox[i]->chave < chave) 
+        while (atual->prox[i] != NULL && atual->prox[i]->e.chave < chave) 
             atual = atual->prox[i];
         
         aux[i] = atual;
@@ -152,7 +154,7 @@ int remover(t_skiplist *l, int chave){
 
     atual = atual->prox[0];
 
-    if (atual != NULL && atual->chave == chave) {
+    if (atual != NULL && atual->e.chave == chave) {
 
         for(int i = 0; i <= l->nivel; i++) {
             if (aux[i]->prox[i] != atual)

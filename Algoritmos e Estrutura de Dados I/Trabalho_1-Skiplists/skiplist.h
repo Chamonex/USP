@@ -13,7 +13,7 @@ typedef struct {
 
 
 typedef struct t_no {
-    int chave;
+    t_elemento e;
     t_no **prox; 
 } t_no;
 
