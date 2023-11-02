@@ -229,12 +229,14 @@ int inserir(t_skiplist *l, char nome[], int tel) {
 }
 
 
-int remover(t_skiplist *l, int chave){
+int remover(t_skiplist *l, char nome[]){
     
     struct t_no *atual = l->inicio;
 
     struct t_no **aux;
     aux = malloc((l->nivelMax+1) * sizeof(struct t_no*));
+
+    int chave = obterChave(nome);
 
     for (int i = 0; i <= l->nivelMax; i++) 
         aux[i] = NULL;

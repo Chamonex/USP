@@ -29,7 +29,7 @@ t_skiplist* inicializar(int max, float p);
 int pesquisar(t_skiplist *l, char nome[]);
 void limpar(t_skiplist *l);
 int inserir(t_skiplist *l, char nome[], int tel);
-int remover(t_skiplist *l, int chave);
+int remover(t_skiplist *l, char nome[]);
 int alterar(t_skiplist *l, char *nome, int novo_tel);
 
 #endif
