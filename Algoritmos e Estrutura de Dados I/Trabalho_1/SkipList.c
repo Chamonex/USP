@@ -92,7 +92,7 @@ int buscaSkipList(SkipList *sk, char nome[]){
 	}
 }
 
-int insereSkipList(SkipList *sk, char nome[], int tel){
+int insereSkipList(SkipList *sk, char nome[], char tel[]){
 	
     if(sk == NULL)
         return 0;
@@ -137,7 +137,7 @@ int insereSkipList(SkipList *sk, char nome[], int tel){
 		}
 
 		strcpy(novo->nome, nome);
-		novo->tel = tel;
+		strcpy(novo->tel, tel);
 
 
 		if(novo_nivel > sk->nivel){
@@ -167,7 +167,7 @@ int insereSkipList(SkipList *sk, char nome[], int tel){
 	return 0;
 }
 
-int alteraSkiplist(SkipList* sk, char nome[], int tel) {
+int alteraSkiplist(SkipList* sk, char nome[], char tel[]) {
 
     if(sk == NULL)
         return 0;
@@ -189,7 +189,7 @@ int alteraSkiplist(SkipList* sk, char nome[], int tel) {
 	// onde a chave procurada deve estar
 	atual = atual->prox[0];
 	if(atual != NULL && atual->chave == chave) {
-		atual->tel = tel;
+		strcpy(atual->tel, tel);
 		return 1;
 	}
 

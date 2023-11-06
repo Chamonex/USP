@@ -2,7 +2,7 @@
 struct NO{
     int chave;
     char nome[20];
-    int tel;
+    char tel[20];
     struct NO **prox;
 };
 
@@ -17,9 +17,9 @@ typedef struct{
 
 
 SkipList* criaSkipList(int MAXLVL, float P);
-int alteraSkiplist(SkipList* sk, char nome[], int tel);
+int alteraSkiplist(SkipList* sk, char nome[], char tel[]);
 void liberaSkipList(SkipList* sk);
-int insereSkipList(SkipList *sk, char nome[], int tel);
+int insereSkipList(SkipList *sk, char nome[], char tel[]);
 int removeSkipList(SkipList *sk, char nome[]);
 int buscaSkipList(SkipList *sk, char nome[]);
 int tamanhoSkipList(SkipList* sk);
