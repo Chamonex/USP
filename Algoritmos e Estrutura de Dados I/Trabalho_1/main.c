@@ -2,6 +2,24 @@
 #include <string.h>
 #include "SkipList.h"
 
+void imprimeSkipList(SkipList *sk){
+    if(sk == NULL)
+        return;
+    int i;
+	printf("\n*****Skip List*****\n");
+	for(i=0; i <= sk->nivel; i++){
+		struct NO *no = sk->inicio->prox[i];
+		printf("Nivel %d: ",i);
+		while(no != NULL){
+			printf("%d ",no->chave);
+            printf("%s ", no->nome);
+            printf("%s ", no->tel);
+			no = no->prox[i];
+		}
+		printf("\n");
+	}
+}
+
 void main() {
 
     SkipList *l = criaSkipList(10, 0.5);
@@ -17,12 +35,15 @@ void main() {
     
     while(opt != '0') {
 
-    // RECEBER ENTRADA
-    fgets(entrada, sizeof(entrada), stdin);
+        for (int i = 0; i < 20; i++) {
+            nome[i] = '\0';
+        }
+        // RECEBER ENTRADA
+        fgets(entrada, sizeof(entrada), stdin);
 
-    len = strlen(entrada);
-    if (entrada[len - 1] == '\n')
-        entrada[len - 1] = '\0';
+        len = strlen(entrada);
+        if (entrada[len - 1] == '\n')
+            entrada[len - 1] = '\0';
 
         // REPARTIR ENTRADA
         atual = strtok(entrada, " ");
@@ -53,45 +74,59 @@ void main() {
         cont = 0;
 
 
-        // tratamento de erro §@
-        len = strlen(tel);
-        for (int i = len-1; i >= 0; i--) {
-            if (tel[i] < 48 || tel[i] > 57) {
-                tel[i] = '\0';
-            }
-        }
+
+
 
         // FUNÇÕES   
-        switch (opt)
-        {
-        case 'I':
-            insereSkipList(l, nome, tel);
+        switch (opt) {
+            case 'I':
 
-            break;
-        
-        case 'P':
-            buscaSkipList(l, nome);
+                // tratamento de erro §@
+                len = strlen(tel);
+                for (int i = len-1; i >= 0; i--) {
+                    if (tel[i] < 48 || tel[i] > 57) {
+                        tel[i] = '\0';
+                    }
+                }
+
+                insereSkipList(l, nome, tel);
+
+                break;
             
-            break;
+            case 'P':
+                buscaSkipList(l, nome);
+                
+                break;
 
-        case 'R':
-            removeSkipList(l, nome);
+            case 'R':
+                removeSkipList(l, nome);
+                
+                break;
+
+            case 'A':
+                // tratamento de erro §@
+                len = strlen(tel);
+                for (int i = len-1; i >= 0; i--) {
+                    if (tel[i] < 48 || tel[i] > 57) {
+                        tel[i] = '\0';
+                    }
+                }
+                alteraSkiplist(l, nome, tel);
+                
+                break;
             
-            break;
+            case 'C':
+                imprimeSkipList(l);
 
-        case 'A':
-            alteraSkiplist(l, nome, tel);
+                break;
             
-            break;
-        
-        case '0':
-            liberaSkipList(l);
+            case '0':
+                liberaSkipList(l);
 
-            break;
+                break;
 
-        default:
-            break;
+            default:
+                break;
         }
     }
-
 }
