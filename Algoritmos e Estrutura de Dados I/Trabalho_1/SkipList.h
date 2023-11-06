@@ -22,8 +22,4 @@ void liberaSkipList(SkipList* sk);
 int insereSkipList(SkipList *sk, char nome[], char tel[]);
 int removeSkipList(SkipList *sk, char nome[]);
 int buscaSkipList(SkipList *sk, char nome[]);
-int tamanhoSkipList(SkipList* sk);
-int vaziaSkipList(SkipList* sk);
-void imprimeSkipList(SkipList *sk);
 
-//struct NO* novoNo(int key, int level);
