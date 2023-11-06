@@ -87,7 +87,7 @@ int buscaSkipList(SkipList *sk, char nome[]){
 		return 1;
 	}
     else {
-		printf("Operacao invalida: contatinho nao encontrado\n");	
+		printf("Contatinho nao encontrado\n");	
         return 0;
 	}
 }
@@ -158,7 +158,7 @@ int insereSkipList(SkipList *sk, char nome[], int tel){
 	}
 
 	if (atual->chave == chave) {
-		printf("contatinho ja inserido\n");
+		printf("Contatinho ja inserido\n");
 		free(aux);
 		return 0;
 	}
@@ -193,6 +193,7 @@ int alteraSkiplist(SkipList* sk, char nome[], int tel) {
 		return 1;
 	}
 
+	printf("Operacao invalida: contatinho nao encontrado\n");
 	return 0;
 
 }
@@ -247,6 +248,7 @@ int removeSkipList(SkipList *sk, char nome[]){
 		return 1;
 	}
 
+	printf("Operacao invalida: contatinho nao encontrado\n");
 	free(aux);
 	return 0;
 }
