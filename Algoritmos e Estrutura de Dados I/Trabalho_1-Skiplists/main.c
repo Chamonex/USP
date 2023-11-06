@@ -1,14 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "skiplist.h"
 
 void main() {
     
-    char opt = 'a';
+    char opt;
     t_skiplist *l = inicializar(10, 0.5);
 
 
-    while (opt != '0') {
+    while (1) {
+
         scanf("%c", &opt);
         getchar();
         char nome[20];
@@ -19,41 +21,34 @@ void main() {
         switch (opt)
         {
         case 'I':
-
-            gets(nome);
-            getchar();
-
-            scanf("%d", &tel);
-            getchar();
-
-            inserir(l, nome, tel);
+            inserir(l);
+            
+            printf("a"); 
             break;
 
         case 'P':
 
-            gets(nome);
-            getchar();
-            pesquisar(l, nome);
+            pesquisar(l);
             break;
         
         case'A':
 
             gets(nome);
-            getchar();
-
             scanf("%d", &novo_tel);
-            getchar();
-
             alterar(l, nome, novo_tel); 
             break;
         
         case 'R':
             gets(nome);
-            getchar();
 
             remover(l, nome); 
             break;
+        
+        case '0':
+            return;
 
+        default:
+            break;
         }
     }
 

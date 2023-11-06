@@ -18,7 +18,7 @@ static int obterChave(char nome[]) {
         cont++;
         c = nome[cont-1];
     }
-
+    
     return chave;
 }
 
@@ -120,17 +120,16 @@ t_skiplist* inicializar(int max, float p) { // descobrir o que é o p ----------
     novo->e.chave = -1;
 
     novo->prox = malloc(sizeof(struct t_no*));
-        
+
     novo->prox[0] = NULL;
 
-
     l->inicio = novo;
-
     return l;
 }
 
 
-int pesquisar(t_skiplist *l, char nome[]) {
+int pesquisar(t_skiplist *l) {
+
 
     /* 
     printar o nome do elemento buscado
@@ -139,18 +138,27 @@ int pesquisar(t_skiplist *l, char nome[]) {
     if (l == NULL)
         return ERROR;
 
+    char nome[20];
+    gets(nome);
+
     int chave = obterChave(nome);
 
     struct t_no *atual = l->inicio;
 
     for (int i = l->nivel; i >= 0; i--) {   // passar em cada nível
-        while((atual->prox[i] != NULL)&&(atual->prox[i]->e.chave < chave)) // entender ! 
-
-            atual = atual->prox[i]; 
+        if(atual->prox[i] != NULL) 
+            printf("if ok"); 
         
     }
 
+    // for (int i = l->nivel; i >= 0; i--) {   // passar em cada nível
+    //     while((atual->prox[i] != NULL)&&(atual->prox[i]->e.chave < chave)) 
+    //         atual = atual->prox[i]; 
+        
+    // }
+
     atual = atual->prox[0];
+
 
     if(atual->e.chave == chave) {
         printf("Contatinho encontrado: telefone %d\n", atual->e.tel);
@@ -164,8 +172,14 @@ int pesquisar(t_skiplist *l, char nome[]) {
 
 
 
-int inserir(t_skiplist *l, char nome[], int tel) {
+int inserir(t_skiplist *l) {
 
+    printf("abriu inserir\n");
+    char nome[20];
+    int tel;
+    gets(nome);
+    getchar();
+    scanf("%d", &tel);
     int chave = obterChave(nome);
 
     struct t_no *atual = l->inicio;
@@ -175,24 +189,30 @@ int inserir(t_skiplist *l, char nome[], int tel) {
 
     for (int i = 0; i <= l->nivelMax; i++)
         aux[i] = NULL;
-    
+
     for (int i = l->nivel; i >= 0 ;i--) {
-        while (atual->prox[i] != NULL && atual->prox[i]->e.chave < chave)
+        while (atual->prox[i] != NULL && atual->prox[i]->e.chave < chave) {
             atual = atual->prox[i];
-        
+        }
+
         aux[i] = atual; // aponta para onde o nó será inserido
+        
     }
 
+    
     atual = atual->prox[0]; 
+    if (atual == NULL)
+    
+    if (atual != NULL) {
 
-    if (atual->e.chave == chave) {
-        // nao pode ter a mesma chave
-        printf("chave ja existe!\n");
-        return ERROR;
+        if (atual->e.chave == chave) {
+            // nao pode ter a mesma chave
+            printf("Contatinho ja inserido\n");
+            return ERROR;
+        }
     }
 
     int sort = sortBin();
-
  
     // se for o ultimo elemento
     // e for sorteado (50%)
@@ -211,7 +231,7 @@ int inserir(t_skiplist *l, char nome[], int tel) {
     if (novo_nivel > l->nivel) {
         // aumentar o nivel da skiplist
         for (int i = l->nivel+1; i <= novo_nivel; i++)
-            aux[i] = NULL;     
+            aux[i] = l->inicio;     
             // aux[i] = l->inicio; // nao seria melhor apontar para NULL? ----------
         
         l->nivel = novo_nivel;
