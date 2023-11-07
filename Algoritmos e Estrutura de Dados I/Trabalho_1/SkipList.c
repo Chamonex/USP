@@ -8,14 +8,18 @@ static int obterChave(char nome[]) {
 
     // gerar uma chave com base no vetor de caracteres nome
     int c = nome[0];
-    int cont = 1;
+	float r = (float)rand()/RAND_MAX*10;
     int chave = 0;
+	int cont = 1;
 
     // funciona somente para letras minusculas
     while (c > 96 && c < 123) {
-        chave += (c-96) * cont;
-        cont++;
-        c = nome[cont-1];
+		
+        chave += (c-96) * r;
+        c = nome[cont];
+		cont++;
+    	float r = (float)rand()/RAND_MAX*10;
+		
     }
     
     return chave;
@@ -244,5 +248,7 @@ void liberaSkipList(SkipList* sk){
         free(no);
     }
 
+    free(sk->inicio);
+    free(sk);
 }
 

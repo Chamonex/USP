@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "SkipList.h"
+#include <stdlib.h>
+#include <time.h>
 
 void imprimeSkipList(SkipList *sk){
     if(sk == NULL)
@@ -21,8 +23,10 @@ void imprimeSkipList(SkipList *sk){
 }
 
 void main() {
+    
+    srand((unsigned)time(0));
 
-    SkipList *l = criaSkipList(10, 0.5);
+    SkipList *l = criaSkipList(15, 0.5);
     char opt = 'a';
     char nome[20];
     char entrada[42];
@@ -126,7 +130,7 @@ void main() {
             
             case '0':
                 liberaSkipList(l);
-                
+
             default:
                 break;
         }
