@@ -244,7 +244,5 @@ void liberaSkipList(SkipList* sk){
         free(no);
     }
 
-    free(sk->inicio);
-    free(sk);
 }
 

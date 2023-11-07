@@ -76,7 +76,6 @@ void main() {
 
 
 
-
         // FUNÇÕES   
         switch (opt) {
             case 'I':
@@ -120,13 +119,17 @@ void main() {
 
                 break;
             
-            case '0':
+            case 'L':
                 liberaSkipList(l);
 
                 break;
-
+            
+            case '0':
+                liberaSkipList(l);
+                
             default:
                 break;
         }
     }
+    
 }
