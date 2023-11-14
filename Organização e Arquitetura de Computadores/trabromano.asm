@@ -339,7 +339,8 @@ dec2hex:
 	
 	li $s2, 0		#contador
 	la $s3, hex		#endereço pra salvar
-	addi $s3, $s3, 36	#começa do ultimo elemento do vetor
+		
+	addi $s3, $s3, 37	#começa do ultimo elemento do vetor
 	
 	jal d2h_divisao
 
