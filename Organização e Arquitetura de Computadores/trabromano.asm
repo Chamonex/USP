@@ -327,7 +327,7 @@ d2h_divisao:
 		d2h_numero_last:
 		addi $t0, $t0, 48
 		
-		sw $s1, 0($s3)		#salva $t0 na memoria (ultimo)
+		sw $t0, 0($s3)		#salva $t0 na memoria (ultimo)
 		 
 	d2h_acabou:
 		jr $ra
@@ -353,8 +353,8 @@ dec2hex:
 	# em s2 está o número de casas que o HEXADECIMAL tem
 	# 	usa-lo como contador para printar
 	# o resultado está na memória! 
-	# TESTE: PRINTANDO UM POR UM: 
-	
+	la $s3, hex
+	addi $s3, $s3, 37
 	li $v0, 11
 	
 	d2h_printando:
@@ -362,7 +362,7 @@ dec2hex:
 		blez $s2, d2h_encerrar
 		subi $s2, $s2, 1
 		lw $a0, 0($s3)
-		addi $s3, $s3, 4
+		subi $s3, $s3, 4
 		syscall
 		j d2h_printando
 
