@@ -293,7 +293,7 @@ d2h_divisao:
 	divu $s1, $s1, 16	#divide por 16, resultado deve ser printado
 	mfhi $t0		#t0 é o resto da divisao, que deve ser dividido de novo				
 	
-	beqz $t1, d2h_ultima_div
+	beqz $s1, d2h_ultima_div
 	
 
 	
@@ -307,7 +307,7 @@ d2h_divisao:
 	#nesse ponto, s1 é o que devo salvar na memoria, e $t0 é o que devo dividir de novo
 	sw $s1, 0($s3)		#salva $s1 na memória
 	move $s1, $t0		#s1 reecbe o resto da divisao para dividir de novo
-	subi $s3, $s4, 4	#t1 recebe o endereço para salvar próximo resultado
+	subi $s3, $s3, 4	#t1 recebe o endereço para salvar próximo resultado
 	addi $s2, $s2, 1	#incrementa contador de casas
 	
 	j d2h_divisao
