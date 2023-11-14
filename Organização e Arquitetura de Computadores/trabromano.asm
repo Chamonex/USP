@@ -60,7 +60,7 @@ main:
 		#LER SEGUNDA OPÇÃO:
 		li $v0, 12		#12 ->ler char. Vai para $v0
 		syscall
-		move $s2, $v0
+		move $s7, $v0
 		
 		#DESVIO
 		beq $s1, 68, dec2
@@ -70,14 +70,14 @@ main:
 		dec2:
 			j string_to_int	#s1 tem o resultado da transformação para inteiro
 			transformei:
-			beq $s2, 66, dec2bin
-			beq $s2, 72, dec2hex
-			beq $s2, 82, dec2rom
+			beq $s7, 66, dec2bin
+			beq $s7, 72, dec2hex
+			beq $s7, 82, dec2rom
 						
-			beq $s2, 100, inv_digito	#caso seja inserida uma letra minuscula
-			beq $s2, 98, inv_digito		
-			beq $s2, 104, inv_digito
-			beq $s2, 114, inv_digito	
+			beq $s7, 100, inv_digito	#caso seja inserida uma letra minuscula
+			beq $s7, 98, inv_digito		
+			beq $s7, 104, inv_digito
+			beq $s7, 114, inv_digito	
 			
 		bin2:
 			beq $s2, 68, bin2dec
@@ -284,36 +284,62 @@ dec2bin:
 ################ DEC 2 HEX ###############
 	
 d2h_divisao:
-	#vou salvar o resultado no vetor de char HEX
-	#t0, resultado de cada divisão
-	#t1, index da memória
-	#s1, elemento em inteiro
+	#vou salvar o resultado no vetor de char
+	#t0, resto de cada divisão
+	#s3, memoria onde salvar
+	#s1, elemento em decimal -> resultados das divisões por 16
 	
-	beq $s1, 0, d2h_acabou
 	
-	divu $s1, $s1, 16	
-	mfhi $t0		#t0 recebe o resto da divisão		
+	divu $s1, $s1, 16	#divide por 16, resultado deve ser printado
+	mfhi $t0		#t0 é o resto da divisao, que deve ser dividido de novo				
+	
+	beqz $t1, d2h_ultima_div
+	
 
-	blt $t0, 10, d2h_numero		#salvar de traz para frente no vetor hex
 	
-	addi $t0, $t0, 7
-	
+	# TRATAMENTO PARA LETRA
+	blt $s1, 10, d2h_numero
+	addi $s1, $s1, 7
 	d2h_numero:
-		addi $t0, $t0, 48
+		addi $s1, $s1, 48
+	#FIM TRATAMENTO PARA LETRA
 	
-	sw $t0, hex($t1)
-	subi $t1, $t1, 4
+	#nesse ponto, s1 é o que devo salvar na memoria, e $t0 é o que devo dividir de novo
+	sw $s1, 0($s3)		#salva $s1 na memória
+	move $s1, $t0		#s1 reecbe o resto da divisao para dividir de novo
+	subi $s3, $s4, 4	#t1 recebe o endereço para salvar próximo resultado
+	addi $s2, $s2, 1	#incrementa contador de casas
 	
 	j d2h_divisao
 	
+	d2h_ultima_div:
+		# aqui, a divisão deu 0, teho que salvar o RESTO
+		# se o resto for zero, só sai.
+		# $t0 = resto
+		
+		beqz $t0, d2h_acabou
+		addi $s2, $s2, 1	#incrementa contador de casas
+		
+		# TRATAMENTO LETRA
+		blt $t0, 10, d2h_numero_last
+		addi $t0, $t0, 7
+		
+		d2h_numero_last:
+		addi $t0, $t0, 48
+		
+		sw $s1, 0($s3)		#salva $t0 na memoria (ultimo)
+		 
 	d2h_acabou:
-		addi $t1, $t1, 4
-		jr $ra 
+		jr $ra
 
 dec2hex:
+	# $s1 = NUMERO DECIMAL
+	# $s3 = index para vetor (36, MAX 10)
+	# $s2 = numero de casas do hexadecimal
 	
-	li $t1, 36	# index para vetor (MAX 10)
-		#TESTANDO, APENAS 3 ELEMENTOS NO VETOR! 
+	li $s2, 0		#contador
+	la $s3, hex		#endereço pra salvar
+	addi $s3, $s3, 36	#começa do ultimo elemento do vetor
 	
 	jal d2h_divisao
 
@@ -322,7 +348,9 @@ dec2hex:
 	la $a0, espaco		
 	syscall	
 
-	#em t1 está o index do ultimo vetor, usar ele pra printar somando 4 até 36!
+	# em t1 está o index do ultimo elemento do vetor em HEXA
+	# em s2 está o número de casas que o HEXADECIMAL tem
+	# 	usa-lo como contador para printar
 	# o resultado está na memória! 
 	# TESTE: PRINTANDO UM POR UM: 
 	
@@ -330,9 +358,10 @@ dec2hex:
 	
 	d2h_printando:
 	
-		bgt $t1, 36, d2h_encerrar
-		lw $a0, hex($t1)
-		addi $t1, $t1, 4
+		blez $s2, d2h_encerrar
+		subi $s2, $s2, 1
+		lw $a0, 0($s3)
+		addi $s3, $s3, 4
 		syscall
 		j d2h_printando
 
@@ -473,7 +502,6 @@ b2d_calculo:
 	
 bin2dec:
 	# o numero possui limite de 34 bits.	
-	# $s7 = contador de digitos
 	# $s1 = resultado
 	# $t0 = cada numero
 	# $t1 = multiplicador
@@ -537,7 +565,6 @@ string_to_int_H:
 
 hex2dec:
 	# o numero possui limite de 10 bits.
-	# $s7 = contador de digitos
 	# $s1 = resultado
 	# $t0 = cada numero
 	# $t1 = multiplicador
