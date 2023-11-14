@@ -7,19 +7,17 @@
 static int obterChave(char nome[]) {
 
     // gerar uma chave com base no vetor de caracteres nome
-    int c = nome[0];
-	float r = (float)rand()/RAND_MAX*10;
     int chave = 0;
-	int cont = 1;
-
-    // funciona somente para letras minusculas
-    while (c > 96 && c < 123) {
-		
-        chave += (c-96) * r;
-        c = nome[cont];
-		cont++;
-    	float r = (float)rand()/RAND_MAX*10;
-		
+	int len = strlen(nome);
+    int i = 0;
+	int j = len-1;
+	int cont = 0;
+	int k = 0;
+    while (i < j) {
+        chave += nome[i] * nome[j];
+		i++;
+		j--;
+		k++;
     }
     
     return chave;

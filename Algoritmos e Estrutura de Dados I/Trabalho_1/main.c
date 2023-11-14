@@ -23,7 +23,7 @@ void imprimeSkipList(SkipList *sk){
 }
 
 void main() {
-    
+
     srand((unsigned)time(0));
 
     SkipList *l = criaSkipList(15, 0.5);
@@ -32,7 +32,6 @@ void main() {
     char entrada[42];
     char *atual;
     char tel[20];
-    char telaux[20];
     int cont = 0;
     int len;
     
