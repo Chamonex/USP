@@ -6,9 +6,9 @@
 	dec: .space 12
 	bin: .space 34
 	hex: .space 40 	#teste: tem que ter 40 bytes para armazenar 10 elementos inteiros.
-	rom: .space 10
-	error2: .asciiz "\nDigito invalido\n"
-	error3: .asciiz "\nO numero ja esta nessa base\n"
+	rom: .space 13	
+	error2: .asciiz "\nDigito ou numero invalido\n"
+	error3: .asciiz "\nO numero inserido ja esta nessa base\n"
 	espaco: .asciiz "\n"
 	letras_rom: .word 73,86,88,76,67,68,77
 	dec2rom_divisores: .word 1,4,5,9,10,40,50,90,100,400,500,900,1000
@@ -45,10 +45,12 @@ main:
 		beq $v0, 72, ler_hexadecimal
 		beq $v0, 82, ler_romano
 	
-		beq $v0, 100, inv_digito	#caso seja inserida uma letra minuscula
+		beq $v0, 100, inv_digito	#caso seja inserida uma letra minuscula "d, b, h, r"
 		beq $v0, 98, inv_digito		
 		beq $v0, 104, inv_digito
 		beq $v0, 114, inv_digito	
+		
+		bne $s1, 100, inv_digito	#caso seja inserida uma letra qualquer
 			
 	ler_base2:
 		#PRINTAR MENSAGEM 3
@@ -60,7 +62,8 @@ main:
 		#LER SEGUNDA OPÇÃO:
 		li $v0, 12		#12 ->ler char. Vai para $v0
 		syscall
-		move $s7, $v0
+		move $s2, $v0		#salvar a segunda base em $s2 (funcoes diretas)
+		move $s6, $v0		#salvar a segunda base em $s6 (funcoes intermediarias)
 		
 		#DESVIO
 		beq $s1, 68, dec2
@@ -70,45 +73,45 @@ main:
 		dec2:
 			j string_to_int	#s1 tem o resultado da transformação para inteiro
 			transformei:
-			beq $s7, 66, dec2bin
-			beq $s7, 72, dec2hex
-			beq $s7, 82, dec2rom
-						
-			beq $s7, 100, inv_digito	#caso seja inserida uma letra minuscula
-			beq $s7, 98, inv_digito		
-			beq $s7, 104, inv_digito
-			beq $s7, 114, inv_digito	
+			beq $s2, 66, dec2bin
+			beq $s2, 72, dec2hex
+			beq $s2, 82, dec2rom
 			
+			beq $s6, 82, dec2rom
+			beq $s6, 66, dec2bin			
+			beq $s6, 72, dec2hex									
+			j checar_base2
+						
 		bin2:
 			beq $s2, 68, bin2dec
 			beq $s2, 72, bin2hex
 			beq $s2, 82, bin2rom
 						
-			beq $s2, 100, inv_digito	#caso seja inserida uma letra minuscula
-			beq $s2, 98, inv_digito		
-			beq $s2, 104, inv_digito
-			beq $s2, 114, inv_digito	
-			
+			j checar_base2
+						
 		hex2:
 			beq $s2, 66, hex2bin
 			beq $s2, 68, hex2dec
 			beq $s2, 82, hex2rom
 						
-			beq $s2, 100, inv_digito	#caso seja inserida uma letra minuscula
-			beq $s2, 98, inv_digito		
-			beq $s2, 104, inv_digito
-			beq $s2, 114, inv_digito	
+			j checar_base2	
 			
 		rom2:
 			beq $s2, 66, rom2bin
 			beq $s2, 72, rom2hex
 			beq $s2, 68, rom2dec
-						
-			beq $s2, 100, inv_digito	#caso seja inserida uma letra minuscula
-			beq $s2, 98, inv_digito		
-			beq $s2, 104, inv_digito
-			beq $s2, 114, inv_digito	
-			
+								
+															
+			j checar_base2
+
+checar_base2:	
+	beq $s2, 100, inv_digito	#caso seja inserida uma letra minuscula
+	beq $s2, 98, inv_digito		
+	beq $s2, 104, inv_digito
+	beq $s2, 114, inv_digito	
+	
+	bne $s2, 100, inv_digito	#caso seja outra letra qualquer
+																			
 base_repetida:
 	#printa a mensagem de erro
 	li $v0, 4
@@ -161,7 +164,6 @@ ler_binario:
 	la $a0, mens2		
 	syscall			#printando
 	
-	
 	#SALVAR O BINARIO NA MEMÓRIA
 	li $v0, 8		#8 -> ler vetor de caracteres
 	la $a0, bin		#endereço da memória onde vou salvar
@@ -169,7 +171,6 @@ ler_binario:
 	syscall
 
 	j ler_base2
-	
 	
 ler_hexadecimal:
 
@@ -187,7 +188,6 @@ ler_hexadecimal:
 	j ler_base2
 
 ler_romano:
-
 	#PRINTAR SEGUNDA MENSAGEM
 	li $v0, 4		#4 -> printar string
 	la $a0, mens2		
@@ -196,17 +196,16 @@ ler_romano:
 	#SALVAR O ROMANO NA MEMÓRIA
 	li $v0, 8		#8 -> ler vetor de caracteres
 	la $a0, rom		#endereço da memória onde vou salvar
-	li $a1, 10		#número máximo de caracteres a ler
+	li $a1, 13		#número máximo de caracteres a ler
 	syscall
 	
 	j ler_base2
 	
 ################ DEC TO BIN ###############
-	
 string_to_int:		
 	li $s1, 0	#número decimal (inteiro)
 	li $t2, 0	#multiplicador
-	li $t5, 11
+	li $t5, 11	#indice loop
 	
 	loop_vetor_dec:
 	bltz $t5, sair_loop_dec
@@ -221,7 +220,7 @@ string_to_int:
 	int2bin_primeiro:
 		# s1 = resultado
 		#t0 = cada numero TEMP
-		#t1 = cada numero multiplicado TEMP
+		#t1 = cada numero multiplicado vezes TEMP
 		#t2 = multiplicador TEMP
 		
 		sub $t0, $t0, 48
@@ -281,53 +280,38 @@ dec2bin:
 	li $v0, 10
 	syscall
 	
-################ DEC 2 HEX ###############
+################ DEC 2 HEX ###############	
+	
 	
 d2h_divisao:
 	#vou salvar o resultado no vetor de char
 	#t0, resto de cada divisão
 	#s3, memoria onde salvar
 	#s1, elemento em decimal -> resultados das divisões por 16
+	#s4, correção de letra
 	
 	
 	divu $s1, $s1, 16	#divide por 16, resultado deve ser printado
 	mfhi $t0		#t0 é o resto da divisao, que deve ser dividido de novo				
 	
-	beqz $s1, d2h_ultima_div
-	
 
 	
 	# TRATAMENTO PARA LETRA
-	blt $s1, 10, d2h_numero
-	addi $s1, $s1, 7
-	d2h_numero:
-		addi $s1, $s1, 48
+	move $s4, $t0
+	blt $s4, 10, d2h_numero
+	addi $s4, $s4, 7
+	d2h_numero:,
+		addi $s4, $s4, 48
 	#FIM TRATAMENTO PARA LETRA
 	
 	#nesse ponto, s1 é o que devo salvar na memoria, e $t0 é o que devo dividir de novo
-	sw $s1, 0($s3)		#salva $s1 na memória
-	move $s1, $t0		#s1 reecbe o resto da divisao para dividir de novo
+	sw $s4, 0($s3)		#salva o resto da divisão na memória
+	
 	subi $s3, $s3, 4	#t1 recebe o endereço para salvar próximo resultado
 	addi $s2, $s2, 1	#incrementa contador de casas
-	
+
+	beqz $s1, d2h_acabou
 	j d2h_divisao
-	
-	d2h_ultima_div:
-		# aqui, a divisão deu 0, teho que salvar o RESTO
-		# se o resto for zero, só sai.
-		# $t0 = resto
-		
-		beqz $t0, d2h_acabou
-		addi $s2, $s2, 1	#incrementa contador de casas
-		
-		# TRATAMENTO LETRA
-		blt $t0, 10, d2h_numero_last
-		addi $t0, $t0, 7
-		
-		d2h_numero_last:
-		addi $t0, $t0, 48
-		
-		sw $t0, 0($s3)		#salva $t0 na memoria (ultimo)
 		 
 	d2h_acabou:
 		jr $ra
@@ -352,17 +336,16 @@ dec2hex:
 	# em t1 está o index do ultimo elemento do vetor em HEXA
 	# em s2 está o número de casas que o HEXADECIMAL tem
 	# 	usa-lo como contador para printar
-	# o resultado está na memória! 
-	la $s3, hex
-	addi $s3, $s3, 37
+	# o resultado está na memória no sentido correto!
+
 	li $v0, 11
-	
+	addi $s3, $s3, 4
 	d2h_printando:
 	
 		blez $s2, d2h_encerrar
 		subi $s2, $s2, 1
 		lw $a0, 0($s3)
-		subi $s3, $s3, 4
+		addi $s3, $s3, 4
 		syscall
 		j d2h_printando
 
@@ -403,7 +386,7 @@ dec2hex:
 	j loop_print_r
 	
 	printar_algarismos:
-	bgt $t1, 1, algarismos_repetidos	#ex: 3/1 = 3; 3 em romanos = III
+	bgt $t1, 1, algarismos_repetidos	#ex: 33/10 = 3, resto 3; 30 em romanos = XXX (3 vezes X)
 	li $v0, 4		
 	lw $a0, 0($s3)		#printar o algarismo equivalente ao divisor
 	syscall		 
@@ -439,7 +422,7 @@ dec2hex:
 	mflo $t1	
 	mfhi $t0		
 	subi $t2, $t2, 1	#reduzir indice
-	bne $t0, $s1, divisoes_dec2rom 	#se o resto nao igual ao numero inserido, ele pôde ser dividido e entrou na proxima função
+	bne $t0, $s1, divisoes_dec2rom 	#se o resto nao for igual ao numero inserido, ele pôde ser dividido e entrou na proxima função
 	j loop_encontrar_divisor	
 
 dec2rom:
@@ -514,13 +497,16 @@ bin2dec:
 	
 	j b2d_calculo
 	fim_b2d_calculo:
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada
 	j printar_resultado
 
 ################ BIN 2 HEX ###############
 bin2hex:
+ j bin2dec #conversao intermediaria
+
 ################ BIN 2 ROM ###############
 bin2rom:
-
+ j bin2dec #conversao intermediaria
 ################ HEX 2 DEC ###############
 string_to_int_H:
 	#s1 - resultado
@@ -578,13 +564,29 @@ hex2dec:
 
 	j string_to_int_H
 transformei_h:
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada
 	j printar_resultado
 	
 ################ HEX 2 BIN ###############
 hex2bin:
+j hex2dec #conversao intermediaria
 ################ HEX 2 ROM ###############
 hex2rom:
+j hex2dec #conversao intermediaria
 ################ ROM 2 DEC ###############
+reset_contagem:
+li $s5, 0
+jr $ra
+
+repeticoes_fim:
+j inv_digito
+
+repeticoes_max:
+bne $t3, $t0, reset_contagem
+beq $t1, $t0, ler_proximo
+li $s5, 0
+jr $ra
+
 contar_validez:
 addi $s4, $s4, 1
 beq $s4, 1, sair_loop_validez
@@ -602,22 +604,11 @@ transformar_rom:
 	
 	encontrar_rom:	#comparar o valor do digito inserido pelo usuario com os valores dos algarismos romanos 
 	li $s4, 0
-	move $t7, $t0		#&t7 = auxiliar para checar se a letra é maiúscula ou minúscula
-	subi $t7, $t7, 32	#na tabela ascii, as letras minusculas tem 32 de diferença das letras maiúsculas
 	
 	lb $t3, rom($t4)	#carregar o conteudo do indice anterior
 	addi $t4, $t4, 1	#atualizar o ponteiro de anterior
 	lb $t1, rom($t2)	#carregar o conteudo do proximo indice
 	addi $t2, $t2, 1	#atualizar o ponteiro de proximo
-	
-	checar_minusculo:
-	bltz $t8, checar_validez
-	sll $t9, $t8, 2		#4 * i
-	addu $t9, $t9, $s2
-	lw $s3, 0($t9)
-	beq $t7, $s3, inv_digito	#caso a letra seja minúscula
-	subi $t8, $t8, 1
-	j checar_minusculo
 
 	checar_validez:
 	li $t8, 6
@@ -629,7 +620,7 @@ transformar_rom:
 	lw $s3, 0($t9)
 	subi $t8, $t8, 1
 	beq $t0, $s3, contar_validez
-	beq $t0, 10, transformei_rom
+	ble $t0, 10, transformei_rom
 	j loop_validez
 	
 	sair_loop_validez:
@@ -640,7 +631,7 @@ transformar_rom:
 	beq $t0, 67, add_100	#letra C
 	beq $t0, 68, add_500	#letra D
 	beq $t0, 77, add_1000	#letra M
-			
+											
 	jr $ra	#ir para o proximo digito
 
 	#adicoes no registrador de resultado/transformacao em si
@@ -648,10 +639,15 @@ transformar_rom:
 	beq $t1, 86, ler_proximo 	#caso o conteudo do proximo indice seja V, pular para a leitura desse indice
 	beq $t1, 88, ler_proximo	#caso o conteudo do proximo indice seja X, pular para a leitura desse indice
 	addi $s1, $s1, 1		#adiciona 1 ao resultado
+	addi $s5, $s5, 1
+	beq $s5, 2, repeticoes_max
+	beq $s5, 3, repeticoes_max
+	beq $s5, 4, repeticoes_fim
 	jr $ra
 			
 	add_5:
 	addi $s1, $s1, 5	#adiciona 5 ao resultado
+	beq $t1, $t0, inv_digito
 	beq $t3, 73, sub_1	#caso o conteudo do indice anterior seja I, subtrai 1 do resultado
 	jr $ra
 
@@ -659,11 +655,16 @@ transformar_rom:
 	beq $t1, 76, ler_proximo	#caso o conteudo do proximo indice seja L, pular para a leitura desse indice
 	beq $t1, 67, ler_proximo	#caso o conteudo do proximo indice seja C, pular para a leitura desse indice
 	addi $s1, $s1, 10		#adiciona 1 ao resultado
+	addi $s5, $s5, 1
 	beq $t3, 73, sub_1		#caso o conteudo do indice anterior seja I, subtrai 1 do resultado
+	beq $s5, 2, repeticoes_max
+	beq $s5, 3, repeticoes_max
+	beq $s5, 4, repeticoes_fim
 	jr $ra
 
 	add_50:
 	addi $s1, $s1, 50		#adiciona 50 ao resultado
+	beq $t1, $t0, inv_digito
 	beq $t3, 88, sub_10		#caso o conteudo do indice anterior seja X, subtrai 10 do resultado
 	jr $ra
 
@@ -671,17 +672,26 @@ transformar_rom:
 	beq $t1, 68, ler_proximo	#caso o conteudo do proximo indice seja D, pular para a leitura desse indice
 	beq $t1, 77, ler_proximo	#caso o conteudo do proximo indice seja M, pular para a leitura desse indice
 	addi $s1, $s1, 100		#adiciona 100 ao resultado
+	addi $s5, $s5, 1
 	beq $t3, 88, sub_10		#caso o conteudo do indice anterior seja X, subtrai 10 do resultado
+	beq $s5, 2, repeticoes_max
+	beq $s5, 3, repeticoes_max
+	beq $s5, 4, repeticoes_fim
 	jr $ra
 
 	add_500:
 	addi $s1, $s1, 500	#adiciona 500 ao resultado
+	beq $t1, $t0, inv_digito
 	beq $t3, 67, sub_100	#caso o conteudo do indice anterior seja C, subtrai 100 do resultado
 	jr $ra
 	
 	add_1000:				
 	addi $s1, $s1, 1000	#adiciona 1000 ao resultado
+	addi $s5, $s5, 1
 	beq $t3, 67, sub_100	#caso o conteudo do indice anterior seja C, subtrai 100 do resultado
+	beq $s5, 2, repeticoes_max
+	beq $s5, 3, repeticoes_max
+	beq $s5, 4, repeticoes_fim
 	jr $ra
 
 	#funcoes auxiliares de subtração	
@@ -699,14 +709,14 @@ transformar_rom:
 
 	ler_proximo:
 	jr $ra	
-
+	
 rom2dec:					#inicia a transformacao
 	#possui um limite de 10 bits
 	#$s1 = resultado
 	#$t1 = conteudo do indice seguinte
-	#$t2 = armazena o numero do proximo indice
+	#$t2 = armazena o valor do proximo indice
 	#$t3 = conteudo do indice anterior
-	#$t4 = armazena o numero do indice anterior
+	#$t4 = armazena o valor do indice anterior
 	#$t5 = iterador loop
 	#t6 = tamanho vetor
 
@@ -716,19 +726,19 @@ rom2dec:					#inicia a transformacao
 	lb $t1, rom($t2)
 	li $t4, -1
 	li $t5, 0
-	li $t6, 10
-	la $s2, letras_rom
+	li $t6, 13
+	la $s2, letras_rom #carregar endereço do vetor com os valores decimais na tabela ascii dos algarismos romanos
 	li $t8, 6 # ultimo indice do vetor letras_rom
 
 	j transformar_rom
 
 	transformei_rom:
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada		
 	j printar_resultado
 
 ################ ROM 2 BIN ###############
 rom2bin:
+j rom2dec #conversao intermediaria
 ################ ROM 2 HEX ###############
 rom2hex:
-	#ENCERRAR PROGRAMA
-	li $v0, 10
-	syscall
+j rom2dec #conversao intermediaria
