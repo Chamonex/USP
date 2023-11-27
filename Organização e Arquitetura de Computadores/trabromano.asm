@@ -174,6 +174,8 @@ ler_binario:
 	
 ler_hexadecimal:
 
+	#t1 = testar cada elemento
+	
 	#PRINTAR SEGUNDA MENSAGEM
 	li $v0, 4		#4 -> printar string
 	la $a0, mens2		
@@ -183,8 +185,8 @@ ler_hexadecimal:
 	li $v0, 8		#8 -> ler vetor de caracteres
 	la $a0, hex		#endereço da memória onde vou salvar
 	li $a1, 10		#número máximo de caracteres a ler
-	syscall
-	
+	syscall	
+
 	j ler_base2
 
 ler_romano:
@@ -516,8 +518,9 @@ string_to_int_H:
 	bltz $t5, sair_loop_hex
 	#leitura do vetor inserido pelo usuario
 	lb $t0, hex($t5)	#$t0 = digito temporario que armazena o conteudo de hex[i]
+	
 	jal encontrar_primeiro_h
-	subi $t5, $t5, 1	#i--
+	subi $t5, $t5, 1	
 	j loop_vetor_hex
 	sair_loop_hex:
 	j transformei_h
