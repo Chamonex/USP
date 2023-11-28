@@ -6,5 +6,6 @@ int main() {
 
     // criar árvore
     t_arvore t = criaArvore();
+
     
 }

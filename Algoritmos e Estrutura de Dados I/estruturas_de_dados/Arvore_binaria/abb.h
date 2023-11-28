@@ -23,9 +23,9 @@ typedef t_apontador t_arvore;
 
 t_arvore criarArvore();
 void limpar(t_arvore);
-t_chave pesquisar(t_apontador, t_chave);
-int inserir(t_elemento, t_apontador);
-int remover(t_chave, t_apontador);
+t_elemento pesquisar(t_apontador, t_chave);
+int inserir(t_apontador, t_elemento);
+int remover(t_apontador, t_chave);
 int vazia (t_arvore);
 
 #endif
