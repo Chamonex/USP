@@ -21,7 +21,20 @@ t_arvore criaArvore() {
 }
 
 
-void limpar(t_arvore);
+void limpar(t_apontador p) {
+
+    /*
+        para limpar uma árvore, devemos usar PÓS-ORDEM
+    */
+
+    if (p != NULL) {
+        limpar(p->esq);
+        limpar(p->dir);
+        free(p);
+    }
+
+    return;
+}
 
 
 t_elemento pesquisar(t_apontador p, t_chave chave) {
