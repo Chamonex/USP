@@ -19,11 +19,11 @@ static int update_altura(t_arvore t) {
     
 }
 
-static void rot_dir(t_abb *t) {
+static void rot_dir(t_arvore t) {
 
 	t_apontador aux, A;
 
-	aux = (*t)->esq;
+	aux = t->esq;
 	A = aux->dir;
 
 	(*t)->esq = A;
@@ -199,14 +199,16 @@ int inserir(t_chave chave, t_arvore t) {
 
 }
 
-static void achaMaiorEsqTroca(t_abb *t, t_abb *sub_t) {
+static void achaMaiorEsqTroca(t_arvore t, t_arvore sub_t) {
 
-	if ((*sub_t)->dir == NULL) {
+    // encontrar elemento mais a esquerda da arvore à direita
+	if (sub_t->dir == NULL) {
+        
+		t_apontador p = sub_t;
+
+		t->e = sub_t->e;
 		
-		t_apontador p = *sub_t;
-		(*t)->chave = (*sub_t)->chave;
-		
-		(*sub_t) = (*sub_t)->esq;
+		sub_t = sub_t->esq;
 
 		free(p);
 
@@ -218,50 +220,49 @@ static void achaMaiorEsqTroca(t_abb *t, t_abb *sub_t) {
 
 }
 
-int remover(t_chave c, t_abb *t) {
+int remover(t_chave c, t_arvore t) {
 
-	if ((*t) == NULL) {
-		printf("Nao pode remover o que nao existe. Reflitao!\n");
-		return NAO_EXISTE;
+	if (t == NULL) {
+		printf("REMOVER: Arvore vazia!\n");
+		return ERROR;
 	}
 
 	// tratar quando acha
-	if (c == (*t)->chave) {
+	if (c == t->e.chave) {
 
 		t_apontador p;
 
-		//caso 1
-		if ((*t)->esq == NULL &&
-			(*t)->dir == NULL) {
+		//caso 1 (nó folha)
+		if (t->e.esq == NULL && t->e.dir == NULL) {
 
-			p = *t;
-			*t = NULL;
+			p = t;
+			t = NULL;
 			free(p);
 
 			return SUCESSO;
 		}
 
-		//caso 2 (esq)
-		if ((*t)->dir == NULL) {
+		//caso 2 (1 filho esq)
+		if (t->dir == NULL) {
 
-			p = *t;
-			*t = p->esq;
+			p = t;
+			t = p->esq;
 			free(p);
 
 			return SUCESSO;
 		} 
-		//caso 2 (dir)
-		if ((*t)->esq == NULL) {
+		//caso 2 (1 filho dir)
+		if (t->esq == NULL) {
 
-			p = *t;
-			*t = p->dir;
+			p = t;
+			t = p->dir;
 			free(p);
 
 			return SUCESSO;
 		}
 
-		//caso 3
-		achaMaiorEsqTroca(&(*t), &(*t)->esq);
+		//caso 3 (2 sub-arvores filhos)
+		achaMaiorEsqTroca(t, t->esq);
 		return SUCESSO;
 
 	}
