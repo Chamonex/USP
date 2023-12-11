@@ -1,4 +1,4 @@
-.data
+data
 	mens1: .asciiz "BEM VINDO!\nEscolha a base para ler o numero:\nB - Binario\nD - Decimal\nH - Hexadecimal\nR - Base Romana\n"
 	mens2: .asciiz "\nDigite o numero a ser convertido\n"
 	mens3: .asciiz "\nEscolha a base para qual quer converter: \nB - Binario\nD - Decimal\nH - Hexadecimal\nR - Base Romana\n"
@@ -219,10 +219,10 @@ string_to_int:
 	
 	loop_vetor_dec:
 	bltz $t5, sair_loop_dec
-					#leitura do vetor inserido pelo usuario
-	lb $t0, dec($t5)		#$t0 = digito temporario que armazena o conteudo de dec[i]
+	#leitura do vetor inserido pelo usuario
+	lb $t0, dec($t5)	#$t0 = digito temporario que armazena o conteudo de dec[i]
 	jal int2bin_primeiro
-	subi $t5, $t5, 1	
+	subi $t5, $t5, 1	#i--
 	j loop_vetor_dec
 	sair_loop_dec:	
 	j transformei
@@ -249,15 +249,12 @@ string_to_int:
 			li $t2, 10
 			jr $ra
 
-#-------------------- CONVERTER DECIMAL PARA BINÁRIO --------------------#
-
 d2b_divisao:
 
 	#s1, numero a dividir
 	#t0, 1 ou 0, resto da divisao
 	#t1, multiplicador
 	#t2, numero multiplicado
-	#s2, resultado
 	
 	beq $s1, 0, d2b_acabou
 	
@@ -285,17 +282,15 @@ dec2bin:
 	li $v0, 4		
 	la $a0, espaco		
 	syscall	
-	
 	#PRINTAR RESULTADO
 	li $v0, 1
 	move $a0, $s2
 	syscall
-	
 	#ENCERRA A FUNCAO
 	li $v0, 10
 	syscall
 	
-#-------------------- CONVERTER DECIMAL PARA HEXADECIMAL --------------------#
+################ DEC 2 HEX ###############	
 	
 	
 d2h_divisao:
@@ -319,10 +314,10 @@ d2h_divisao:
 		addi $s4, $s4, 48
 	#FIM TRATAMENTO PARA LETRA
 	
-
+	#nesse ponto, s1 é o que devo salvar na memoria, e $t0 é o que devo dividir de novo
 	sw $s4, 0($s3)		#salva o resto da divisão na memória
 	
-	subi $s3, $s3, 4	#s3 recebe o endereço para salvar próximo resultado
+	subi $s3, $s3, 4	#t1 recebe o endereço para salvar próximo resultado
 	addi $s2, $s2, 1	#incrementa contador de casas
 
 	beqz $s1, d2h_acabou
@@ -348,10 +343,15 @@ dec2hex:
 	la $a0, espaco		
 	syscall	
 
+	# em t1 está o index do ultimo elemento do vetor em HEXA
+	# em s2 está o número de casas que o HEXADECIMAL tem
+	# 	usa-lo como contador para printar
+	# o resultado está na memória no sentido correto!
+
 	li $v0, 11
 	addi $s3, $s3, 4
 	d2h_printando:
-		#PRINTANDO O RESULTADO
+	
 		blez $s2, d2h_encerrar
 		subi $s2, $s2, 1
 		lw $a0, 0($s3)
@@ -364,7 +364,7 @@ dec2hex:
 		li $v0, 10
 		syscall
 	
-#-------------------- CONVERTER DECIMAL PARA ROMANO --------------------#							
+################ DEC 2 ROM ###############									
 	retornar_divisoes:
 	j loop_divisoes_dec2rom
 	
@@ -451,17 +451,14 @@ dec2rom:
 	#ENCERRAR PROGRAMA
 	li $v0, 10
 	syscall	
-	
-	
-#-------------------- CONVERTER BINÁRIO PARA DECIMAL --------------------#
-
+################ BIN 2 DEC ###############
 b2d_calculo:
 	#$t0 = digito temp
 	#$t1 = digito multiplicado temp
 	#$s1 = resultado
 	#$t2 = index
 	
-	li $s1, 0		
+	li $s1, 0
 	li $t2, 0
 	li $t5, 11
 	loop_vetor_bin:
@@ -480,7 +477,7 @@ b2d_calculo:
 		#t2 = zero até encontrar um numero
 		
 		sub $t0, $t0, 48	#digito temporario subtraido
-		bltz $t0, inv		#pula se for invalido
+		bltz $t0, inv	#pula se for invalido
 
 		beqz $t2, primeiro
 		
@@ -498,20 +495,19 @@ b2d_calculo:
 			jr $ra		#vai para o proximo sem realizar operações
 	
 bin2dec:
+	# o numero possui limite de 34 bits.	
 	# $s1 = resultado
 	# $t0 = cada numero
 	# $t1 = multiplicador
-	# $t2 = index (começa com 32)
+	# $t2 = index  		começa com 32
 	# $t5 =  aux loop
-	
+	# POR ENQUANTO, POR MAIS QUE O LIMITE SEJA 34 DIGITOS BINÁRIOS, O CÓDIGO SÓ SUPORTA 
+	# 8 DIGITOS
 	li $t5, 11
 	
 	j b2d_calculo
 	fim_b2d_calculo:
-	bne $s6, 68, transformei	# caso a transformacao nao tenha como objetivo 
-					# final um numero decimal, carrega o resultado 
-					# da transformacao em decimal para a conversao 
-					# desejada
+	bne $s6, 68, transformei	#caso a transformacao nao tenha como objetivo final um numero decimal, carrega o resultado da transformacao em decimal para a conversao desejada
 	j printar_resultado
 
 ################ BIN 2 HEX ###############
@@ -583,17 +579,12 @@ transformei_h:
 	j printar_resultado
 	
 ################ HEX 2 BIN ###############
-
 hex2bin:
 j hex2dec #conversao intermediaria
-
 ################ HEX 2 ROM ###############
-
 hex2rom:
 j hex2dec #conversao intermediaria
-
 ################ ROM 2 DEC ###############
-
 reset_contagem:
 li $s5, 0
 jr $ra
