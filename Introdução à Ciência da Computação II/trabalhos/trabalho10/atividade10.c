@@ -65,10 +65,10 @@ void overlapPair(int v[], char* str1, char* str2) {
         j = 0;
     }
 
-    printf("\n---OVERLAP PAIR %s e %s---\n\n", str1, str2);
-    printf("OVERLAP = %d\n", overlap);
-    printf("INDEX 1 = %d\n", index1);
-    printf("INDEX 2 = %d\n", index2);
+    // printf("\n---OVERLAP PAIR %s e %s---\n\n", str1, str2);
+    // printf("OVERLAP = %d\n", overlap);
+    // printf("INDEX 1 = %d\n", index1);
+    // printf("INDEX 2 = %d\n", index2);
 
     v[0] = overlap;
     v[1] = index1;
@@ -105,7 +105,16 @@ void findMostOverlaping(char** temp, int maiorOverlap[], int n, int a, int b) {
     findMostOverlaping(temp, maiorOverlap, n, a, b);      // guardar o return!
 }
 
-void concatenar(char** temp, int maiorOverlap[]) {
+void trocarString(char** temp, int iStr, int iDestino) {
+    char* aux = malloc(MAX * sizeof(char));
+    aux = temp[iDestino];
+    temp[iDestino] = temp[iStr];
+    temp[iStr] = aux;
+    free(aux);
+    temp[iStr][0] = '\0';
+}
+
+void concatenar(char** temp, int maiorOverlap[], int nTemp) {
 
     printf("CONCATENAR\n");
     int cont;
@@ -113,7 +122,6 @@ void concatenar(char** temp, int maiorOverlap[]) {
     for (cont = 0; cont < maiorOverlap[0]; cont++)  
         temp[maiorOverlap[3]][maiorOverlap[1]+cont] = temp[maiorOverlap[4]][maiorOverlap[2]+cont];
 
-    printf("primeiro passo = %s\n", temp[maiorOverlap[3]]);
 
     char* aux = malloc(sizeof(char) * (MAX - maiorOverlap[0]));
     int iaux = 0;
@@ -121,26 +129,30 @@ void concatenar(char** temp, int maiorOverlap[]) {
 
     for (cont; cont < strlen(temp[maiorOverlap[4]]); cont++) {
         aux[iaux] = temp[maiorOverlap[4]][cont];
-        printf("a string auxiliar recebeu %c\n", temp[maiorOverlap[4]][cont]);
         errorCont++;
         iaux++;
     }
-    printf("auxiliar = %s\n", aux);
+
     
     // TRATAMENTO ERRO
     while((aux[errorCont] <65)||(aux[errorCont] > 90 && aux[errorCont] < 97)||(aux[errorCont] > 122)) {
-        printf("vou excluir o %d (%c)", errorCont, aux[errorCont]);
         aux[errorCont] = '\0';
         errorCont--;
     }
 
-    printf("auxiliar apos correcao = %s\n", aux);
-    
     strcat(temp[maiorOverlap[3]], aux);
-    printf("RESULTADO PREVIO -> %s\n", temp[maiorOverlap[3]]);
-    
-    free(temp[maiorOverlap[4]]);
-    temp[maiorOverlap[4]][0] = '\0';
+    /*
+        maiorOverlap
+        0 = overlap
+        1 = index 1
+        2 = index 2
+        3 = string 1
+        4 = string 2
+        nTemp = numero de vetores que tem agora
+    */
+    // trocar a string 2 pela ultima 
+
+    trocarString(temp, maiorOverlap[4], nTemp-1);
 
 }
 
@@ -168,19 +180,20 @@ void main() {
 
     while (nTemp > 1) {
 
+        printf("entrei no while, nTemp = %d\n", nTemp);
         maiorOverlap[0] = 0;
 
-        if (temp)
-        findMostOverlaping(temp, maiorOverlap, n, 0, 1);
-        concatenar(temp, maiorOverlap);
+        findMostOverlaping(temp, maiorOverlap, nTemp, 0, 1);
+        concatenar(temp, maiorOverlap, nTemp);
+        
+        for (int i = 0; i < nTemp; i++)
+            printf("%d -> %s\n", i, temp[i]);
+
         nTemp--;
 
-        printf("PRINTANDO TEMP\n");    
         for (int k = 0; k < n; k++)
-            printf("%d -> %s\n", k, temp[k]);    
+            printf("%d -> %s\n", k, temp[k]);  
     }
-    printf("FIM\n");
-    printf("\n\n%s\n", temp[maiorOverlap[3]]);
 
 }
 
