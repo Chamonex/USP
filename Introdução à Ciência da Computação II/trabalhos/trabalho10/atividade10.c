@@ -77,6 +77,7 @@ void overlapPair(int v[], char* str1, char* str2) {
 
 void findMostOverlaping(char** temp, int maiorOverlap[], int n, int a, int b) {
 
+    printf("entrei no findMostOberlaping n = %d\n", n);
     if ((temp[a][0] != '\0')||(temp[b][0] != '\0')) {
 
         int *v = malloc(5 * sizeof(int));
@@ -152,8 +153,13 @@ void concatenar(char** temp, int maiorOverlap[], int nTemp) {
     */
     // trocar a string 2 pela ultima 
 
-    trocarString(temp, maiorOverlap[4], nTemp-1);
+    // for (int i = 0; i < nTemp; i++)
+    //     printf("%d -> %s\n", nTemp, temp[nTemp]);
 
+    // trocarString(temp, maiorOverlap[4], nTemp-1);
+    // printf("realizei a trocaString\n");
+    // for (int i = 0; i < nTemp; i++)
+    //     printf("%d -> %s\n", nTemp, temp[nTemp]);
 }
 
 void main() {
@@ -185,6 +191,7 @@ void main() {
 
         findMostOverlaping(temp, maiorOverlap, nTemp, 0, 1);
         concatenar(temp, maiorOverlap, nTemp);
+
         
         for (int i = 0; i < nTemp; i++)
             printf("%d -> %s\n", i, temp[i]);
