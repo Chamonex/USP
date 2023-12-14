@@ -83,6 +83,18 @@ int linkarEsquinas(t_esquina** bairro, int nEsquinas, int colunas) {
 
 }
 
+int EncontrarNCaminhosPossiveis(t_esquina** bairro) {
+    int n = 0;
+    testeCaminho(bairro[0], &n);
+    return n;
+}
+
+int testeCaminho(t_esquina* e, int* n) {
+    if (e->esq_direita != NULL) {
+        n++;
+        testeCaminho(e->esq_direita, n);
+    }
+}
 
 int main() {
     int linhas, colunas;
