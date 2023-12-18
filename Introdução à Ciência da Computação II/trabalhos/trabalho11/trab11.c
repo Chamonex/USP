@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
     int id1;
@@ -7,12 +8,12 @@ typedef struct {
     int amigos;
 } t_rua;
 
-typedef t_esquina* t_apontador;
+typedef struct t_esquina *t_apontador;
 
 typedef struct t_esquina{
     int id;
-    t_rua* rua_direita;
-    t_rua* rua_baixo;
+    t_rua rua_direita;
+    t_rua rua_baixo;
     t_apontador esq_direita;
     t_apontador esq_baixo;
 } t_esquina;
@@ -20,35 +21,39 @@ typedef struct t_esquina{
 // ---------------------------------------------------------------- //
 
 
-t_rua* lerRua() {
-    t_rua* r = malloc(sizeof(t_rua));
-
-    if (r == NULL) {
-        r->id1 = -1;
-        return r;
-    }
-
-    scanf("%d", r->id1);
-    scanf("%d", r->id2);
-    scanf("%d", r->amigos);
+t_rua lerRua() {
+    
+    t_rua r;
+    
+    scanf("%d%d%d", &r.id1, &r.id2, &r.amigos);
 
     return r;
 }
 
 
-t_esquina* criaEsquina(int id, int colunas) {
+t_esquina* criaEsquina(int id, int colunas, int nEsquinas) {
 
     t_esquina* e = (t_esquina*) malloc(sizeof(t_esquina));
     e->id = id;
 
-    if (!(id % colunas == id)) {    // se for a ultima da linha, não tem direita
-
-        e->rua_direita = lerRua();
-
+    if (id+1 == nEsquinas) {
+        e->esq_direita = NULL;
+        e->esq_baixo = NULL;
+        return e;
     }
 
-    e->rua_baixo = lerRua();
+    if (!(id % colunas == (colunas-1))) {   // se nao for a ultima da linha
+                                            // pode ler a direita
 
+        e->rua_direita = lerRua();
+    }
+
+    if (!(id >= (nEsquinas - colunas))) {       // Se nao for a ultima linha
+                                                // pode ler baixo
+
+        e->rua_baixo = lerRua();
+    }
+    
     e->esq_direita = NULL;
     e->esq_baixo= NULL;
 
@@ -57,65 +62,113 @@ t_esquina* criaEsquina(int id, int colunas) {
 
 int linkarEsquinas(t_esquina** bairro, int nEsquinas, int colunas) {
 
+
     for (int i = 0; i < nEsquinas; i++) {
 
         if (i == (nEsquinas - 1)) {         // ultimo, não linka nada
             return 1;
         }
 
-        
-
-        if (i < (nEsquinas - colunas)) {    // não está na ultima linha,
-                                            // linka os dois
-
-            bairro[i]->esq_direita = bairro[i+1];
-
+        // ! ultima linha
+        if (i < (nEsquinas - 1 - colunas))
             bairro[i]->esq_baixo = bairro[i+colunas];
-
-        }
-
-        if (i % colunas == i) {             // está na ultima coluna,
-                                            // não linka o direita
-            bairro[i]->esq_baixo = bairro[i+colunas];   
-        }
+        
+        // ! ultima coluna
+        if (!(i % colunas == (colunas-1)))
+            bairro[i]->esq_direita = bairro[i+1];   
 
     }
 
 }
 
-int EncontrarNCaminhosPossiveis(t_esquina** bairro) {
-    int n = 0;
-    testeCaminho(bairro[0], &n);
-    return n;
+void ExchangeCharacters(char* str, int p1, int p2) {
+    char tmp;
+    tmp = str[p1];
+    str[p1] = str[p2];
+    str[p2] = tmp;
 }
 
-int testeCaminho(t_esquina* e, int* n) {
-    if (e->esq_direita != NULL) {
-        n++;
-        testeCaminho(e->esq_direita, n);
+int testarCaminho(char* aux, t_esquina** bairro, int len) {
+    int x = 0;
+
+    t_apontador e = bairro[0];
+
+
+    for (int i = 0; i < len; i++) {
+        if (aux[i] == '1') {
+            x += e->rua_direita.amigos;
+            e = e->esq_direita;
+        }
+        else if (aux[i] == '0') {
+            x +=  e->rua_baixo.amigos;
+            e = e->esq_baixo;
+        }
+    }
+
+    return x;
+
+}
+
+void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho) {
+    int i, len;
+    int teste = 0;
+    len = strlen(str);
+
+    if (k == len) {
+        teste = testarCaminho(str, bairro, nCaminho);
+        if (teste > *x)
+            *x = teste;
+    }
+
+    else {
+        for (i = k; i < len; i++) {
+            ExchangeCharacters(str, k, i);
+            RecursivePermute(str, k + 1, bairro, x, nCaminho);
+            ExchangeCharacters(str, i, k);
+        }
     }
 }
+
 
 int main() {
     int linhas, colunas;
-    int nRuas, nEsquinas;
+    int nEsquinas;
+    char *vaux;
+    int x = 0;
+    int nCaminho;
 
     scanf("%d%d", &linhas, &colunas);
-    printf("%d - %d\n", linhas, colunas);
-    nRuas = (linhas - 1) * (colunas - 1);
+
     nEsquinas = linhas * colunas;
 
+    nCaminho = linhas + colunas -2;
 
     t_esquina** bairro = (t_esquina**) malloc(nEsquinas * sizeof(t_esquina*));
-
-
+    t_esquina* auxiliar;
 
     for (int i = 0; i < nEsquinas; i++) {
-        bairro[i] = criaEsquina(i, colunas);
+        auxiliar = criaEsquina(i, colunas, nEsquinas);
+        bairro[i] = auxiliar;
     }
 
+
     linkarEsquinas(bairro, nEsquinas, colunas);
+    
+    vaux = (char*) malloc(nCaminho * sizeof(char));
+
+    for (int i = 0; i < (colunas-1); i++) {
+        vaux[i] = '1';
+    }
+    
+    for (int i = (colunas-1); i < nCaminho; i++) {
+        vaux[i] = '0';
+    }
+
+    // corrigir erro
+    vaux[nCaminho] = '\0';
 
     
+    RecursivePermute(vaux, 0, bairro, &x, nCaminho);
+    printf("%d\n", x);
 
 }
