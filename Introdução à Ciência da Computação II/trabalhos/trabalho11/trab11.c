@@ -109,12 +109,15 @@ int testarCaminho(char* aux, t_esquina** bairro, int len) {
 
 }
 
-void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho) {
+void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho, int *dinamica) {
     int i, len;
     int teste = 0;
     len = strlen(str);
 
     if (k == len) {
+        // ! se ja fiz o teste com esse str
+
+        if ( )
         teste = testarCaminho(str, bairro, nCaminho);
         if (teste > *x)
             *x = teste;
@@ -123,12 +126,18 @@ void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho
     else {
         for (i = k; i < len; i++) {
             ExchangeCharacters(str, k, i);
-            RecursivePermute(str, k + 1, bairro, x, nCaminho);
+            RecursivePermute(str, k + 1, bairro, x, nCaminho, dinamica);
             ExchangeCharacters(str, i, k);
         }
     }
 }
 
+void inicializarVetor(int n, int *v) {
+
+    for (int i = 0; i < n; i++) 
+        v[i] = 0;
+
+}
 
 int main() {
     int linhas, colunas;
@@ -136,12 +145,15 @@ int main() {
     char *vaux;
     int x = 0;
     int nCaminho;
+    int* dinamica;
 
     scanf("%d%d", &linhas, &colunas);
 
     nEsquinas = linhas * colunas;
 
     nCaminho = linhas + colunas -2;
+
+    dinamica = (int*) malloc(nCaminho * sizeof(int));
 
     t_esquina** bairro = (t_esquina**) malloc(nEsquinas * sizeof(t_esquina*));
     t_esquina* auxiliar;
@@ -151,6 +163,7 @@ int main() {
         bairro[i] = auxiliar;
     }
 
+    inicializarVetor(nCaminho, auxiliar);
 
     linkarEsquinas(bairro, nEsquinas, colunas);
     
@@ -168,7 +181,8 @@ int main() {
     vaux[nCaminho] = '\0';
 
     
-    RecursivePermute(vaux, 0, bairro, &x, nCaminho);
+    RecursivePermute(vaux, 0, bairro, &x, nCaminho, dinamica);
+    
     printf("%d\n", x);
 
 }
