@@ -18,6 +18,14 @@ typedef struct t_esquina{
     t_apontador esq_baixo;
 } t_esquina;
 
+// tad com vetor de char
+
+typedef struct {
+    int x;
+    char *aux;
+} t_dinamica;
+
+
 // ---------------------------------------------------------------- //
 
 
@@ -109,18 +117,45 @@ int testarCaminho(char* aux, t_esquina** bairro, int len) {
 
 }
 
-void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho, int *dinamica) {
+int buscaSeq(t_dinamica* dinamica, int n, char *chave) {
+    int i = 0;
+    
+    for (i = 0; i < n; i++) {
+        if (strcmp(dinamica->aux[i], chave) == 0) {
+            printf("encontrou, x = %d\n", dinamica[i].x);
+            printf("vou retornar %d\n", dinamica[i].x);
+            return dinamica[i].x;
+        }
+    }
+
+    printf("vou retornar -1");
+    return -1;
+
+}
+
+void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho, t_dinamica *dinamica) {
     int i, len;
-    int teste = 0;
+    int teste;
     len = strlen(str);
 
-    if (k == len) {
-        // ! se ja fiz o teste com esse str
+    // for (int i = 0; i < nEsquinas; i++) {
+    //     dinamica->key = auxiliar
+    // }
 
-        if ( )
-        teste = testarCaminho(str, bairro, nCaminho);
-        if (teste > *x)
-            *x = teste;
+    //  if ! (buscar aux[i] em dinamica.key)
+    //      testar Caminho
+    //  else
+    //      teste = dinamica[i]-> x;
+
+    if (k == len) {
+        teste = buscaSeq(dinamica, nCaminho, str);
+        if (teste == -1) {
+
+            teste = testarCaminho(str, bairro, nCaminho);
+            if (teste > *x)
+                *x = teste;
+
+        }
     }
 
     else {
@@ -132,12 +167,6 @@ void RecursivePermute(char* str, int k, t_esquina** bairro, int* x, int nCaminho
     }
 }
 
-void inicializarVetor(int n, int *v) {
-
-    for (int i = 0; i < n; i++) 
-        v[i] = 0;
-
-}
 
 int main() {
     int linhas, colunas;
@@ -145,7 +174,7 @@ int main() {
     char *vaux;
     int x = 0;
     int nCaminho;
-    int* dinamica;
+    t_dinamica* dinamica;
 
     scanf("%d%d", &linhas, &colunas);
 
@@ -153,7 +182,7 @@ int main() {
 
     nCaminho = linhas + colunas -2;
 
-    dinamica = (int*) malloc(nCaminho * sizeof(int));
+    dinamica = (t_dinamica*) malloc(nCaminho * sizeof(t_dinamica));
 
     t_esquina** bairro = (t_esquina**) malloc(nEsquinas * sizeof(t_esquina*));
     t_esquina* auxiliar;
@@ -162,8 +191,6 @@ int main() {
         auxiliar = criaEsquina(i, colunas, nEsquinas);
         bairro[i] = auxiliar;
     }
-
-    inicializarVetor(nCaminho, auxiliar);
 
     linkarEsquinas(bairro, nEsquinas, colunas);
     
@@ -182,7 +209,7 @@ int main() {
 
     
     RecursivePermute(vaux, 0, bairro, &x, nCaminho, dinamica);
-    
+
     printf("%d\n", x);
 
 }
