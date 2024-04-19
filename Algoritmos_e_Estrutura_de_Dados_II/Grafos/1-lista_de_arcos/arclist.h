@@ -36,7 +36,7 @@ Graph initGraph() {
 Arc newArc(Vertex v, Vertex w) {
     Arc e;          // função que retorna um arco com os
     e.v = v;        // vértices passados.
-    e.w = 2;
+    e.w = w;
     return e;
 }
 
@@ -47,11 +47,10 @@ void destroyGraph(Graph G) {
 }
 
 void insertArc(Graph G, Vertex v, Vertex w) {
-    printf("inserindo %d %d\n", v, w);
     // checando se já não tem um arco igual:
     int i;
     for(i = 0; i < G->size; i++) {
-        if (G->arcs[i].v == v && G->arcs[i].w == w) {
+        if ((G->arcs[i].v == v) && (G->arcs[i].w == w)) {
             // este arco já existe
             return;
         }
@@ -74,6 +73,7 @@ void removeArc(Graph G, Vertex v, Vertex w) {
             // encontrou o grafo que quer remover
             G->arcs[i] = G->arcs[G->size -1];
             G->size--;
+            return;
         }
     }
 }
