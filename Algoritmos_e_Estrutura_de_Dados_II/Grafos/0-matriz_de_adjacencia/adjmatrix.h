@@ -23,8 +23,20 @@ int insertEdge(Graph*, Vertex, Vertex);
 int removeArc(Graph*, Vertex, Vertex);
 int removeEdge(Graph*, Vertex, Vertex);
 void printGraph(Graph*);
+static Vertex** generateAdj(int);
 
 
+Graph* initGraph(int V) {
+    
+    Graph *G = malloc(sizeof(*G));
+    G->nVertices = V;
+    G->nArcos = 0;
+    G-> adj = generateAdj(G->nVertices);
+    return G;
+}
+
+
+// função que cria uma matriz quadratica
 static Vertex** generateAdj(int V) {
     
     int i, j;
@@ -41,18 +53,7 @@ static Vertex** generateAdj(int V) {
 }
 
 
-
-Graph* initGraph(int V) {
-    
-    Graph *G = malloc(sizeof(*G));
-    G->nVertices = V;
-    G->nArcos = 0;
-    G-> adj = generateAdj(G->nVertices);
-    return G;
-}
-
-// função que cria uma matriz quadratica
-
+// insere um novo arco no grafo
 int insertArc(Graph *G, Vertex v, Vertex w) {
     if (G->adj[v][w] == 0) {
         G->adj[v][w] = 1;
@@ -66,6 +67,7 @@ int insertArc(Graph *G, Vertex v, Vertex w) {
     }
 }
 
+
 int insertEdge(Graph *G, Vertex v, Vertex w){
     
     if(insertArc(G, v, w) == 1) {
@@ -77,6 +79,8 @@ int insertEdge(Graph *G, Vertex v, Vertex w){
 
 }
 
+
+// remove um arco do grafo
 int removeArc(Graph *G, Vertex v, Vertex w) {
     if (G->adj[v][w] == SUCCESS) {
         G->adj[v][w] = 0;
@@ -90,6 +94,7 @@ int removeArc(Graph *G, Vertex v, Vertex w) {
     }
 }
 
+
 int removeEdge(Graph *G, Vertex v, Vertex w) {
     if (removeArc(G, v, w) == SUCCESS) {
         if (removeArc(G, w, v) == SUCCESS) {
@@ -99,6 +104,8 @@ int removeEdge(Graph *G, Vertex v, Vertex w) {
     return ERROR;
 }
 
+
+// escreve o grafo atual na tela
 void printGraph(Graph *G) {
     
     for (int i = 0; i < G->nVertices; i++) {

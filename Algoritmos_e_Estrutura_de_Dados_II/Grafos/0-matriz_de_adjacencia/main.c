@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "adjlist.h"
+#include "adjmatrix.h"
 
 int main() {
 
