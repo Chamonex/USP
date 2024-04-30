@@ -1,19 +1,3 @@
-/*
-    cada vértice do grafo possui uma lista encadeada.
-    A lista associada com um vértice v contém todos os 
-    vizinhos de v.
-    Por exemplo, eis o vetor de listas de adjacência do
-    grafo cujos arcos são  0-1 0-5 1-0 1-5 2-4 3-1 5-3 :
-
-        0: 5 1
-        1: 5 0
-        2: 4
-        3: 1
-        4:  
-        5: 3
-*/
-
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,14 +5,13 @@
 #define SUCCESS 1
 #define Vertex int
 
-// um Grafo é um ponteiro para a estrutura grafo
 typedef struct graph *Graph;
-// um Link é um ponteiro para um Node
 typedef struct Node *Link;
 
 struct Node {
-    Vertex w;
-    int weight; // peso
+    Vertex w;       
+    int weight;
+    int visited;    // se já foi visitado pela busca
     Link next;
 };
 
@@ -38,17 +21,20 @@ struct graph {
     Link* adj;      // ponteiro para um vetor de listas de adjacencia
 };
 
-Graph initGrapg(int);
+Graph initGraph(int);
 int insertArc(Graph, Vertex, Vertex, int);
 int insertEdge(Graph, Vertex, Vertex, int);
-static Link createNode(Vertex, Link, int);
+static Link createNode(Vertex, int);
 int removeArc(Graph, Vertex, Vertex);
 int removeEdge(Graph, Vertex, Vertex);
 void printGraph(Graph);
 
+void DFS(Graph, Vertex);
+static void clearVisited(Graph);
+void startDFS(Graph, Vertex);
 
 // constrói um grafo com vértices 0 1 ... v-1
-Graph initGrapg(int v) {
+Graph initGraph(int v) {
     Graph G = malloc(sizeof(*G));
     G->nVertices = v;
     G->nArcos = 0;
@@ -66,8 +52,20 @@ int insertArc(Graph G, Vertex v, Vertex w, int weight) {
             return ERROR;
         }
     }
-    G->adj[v] = createNode(w, G->adj[v], weight); // vai para o inicio da lista
-    G->nArcos++;
+    if (G->adj[v] == NULL) {
+        G->adj[v] = createNode(w, weight);
+        G->nArcos++;
+        return SUCCESS;
+    }
+    else {
+        for(Link a = G->adj[v]; a != NULL; a = a->next) {
+            if (a->next == NULL) {
+                a->next = createNode(w, weight);
+                G->nArcos++;
+                return SUCCESS;
+            }
+        }
+    }
     return SUCCESS;
 }
 
@@ -79,11 +77,12 @@ int insertEdge(Graph G, Vertex v, Vertex w, int weight) {
     return ERROR;
 }
 
-static Link createNode(Vertex w, Link next, int weight) {
+static Link createNode(Vertex w, int weight) {
     Link a = malloc(sizeof(*a));
     a->w = w;
+    a->visited = 0;     // começa como falso
     a->weight = weight;
-    a->next = next;
+    a->next = NULL;
     return a;
 }
 
@@ -115,8 +114,44 @@ void printGraph(Graph G) {
   for (int i = 0; i < G->nVertices; i++) {
     printf("Vertex %d: ", i);
     for (Link p = G->adj[i]; p != NULL; p = p->next) {
-      printf(" %d > %d / ", i, p->w);
+      printf(" %d->%d / ", i, p->w);
     }
     printf("\n");
   }
 }
+
+
+
+
+
+
+//------------- DFS -----------//
+
+
+
+void DFS(Graph G, Vertex x) {
+
+    G->adj[x]->visited = 1;         // no inicial
+    printf(">> DFS %d visitado\n", G->adj[x]->w);
+    // percorrer os adjacentes a v
+    for (Link p = G->adj[x]; p != NULL; p = p->next) {
+        Vertex proximo = p->w;
+        if (G->adj[proximo]->visited == 0) {
+            DFS(G, proximo);
+        }   
+    }
+}
+
+static void clearVisited(Graph G) {
+    for (int i = 0; i < G->nVertices; i++) {
+        if (G->adj[i] != NULL)
+            G->adj[i]->visited = 0;
+    }
+}
+
+void startDFS(Graph G, Vertex x) {
+    printf("DFS\n");
+    clearVisited(G);
+    DFS(G, x);
+}
+
