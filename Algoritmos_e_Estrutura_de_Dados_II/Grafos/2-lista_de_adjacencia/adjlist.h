@@ -28,6 +28,7 @@ typedef struct Node *Link;
 
 struct Node {
     Vertex w;   // vizinho de v
+    int weight;
     Link next;
 };
 
@@ -38,9 +39,9 @@ struct graph {
 };
 
 Graph initGrapg(int);
-int insertArc(Graph, Vertex, Vertex);
-int insertEdge(Graph, Vertex, Vertex);
-static Link createNode(Vertex, Link);
+int insertArc(Graph, Vertex, Vertex, int);
+int insertEdge(Graph, Vertex, Vertex, int);
+static Link createNode(Vertex, Link, int);
 int removeArc(Graph, Vertex, Vertex);
 int removeEdge(Graph, Vertex, Vertex);
 void printGraph(Graph);
@@ -58,30 +59,31 @@ Graph initGrapg(int v) {
     return G;
 }
 
-int insertArc(Graph G, Vertex v, Vertex w) {
+int insertArc(Graph G, Vertex v, Vertex w, int weight) {
     for (Link a = G->adj[v]; a != NULL; a = a->next) {
         if (a->w == w) {
             printf("This Arc already exists!\n");
             return ERROR;
         }
     }
-    G->adj[v] = createNode(w, G->adj[v]); // vai para o inicio da lista
+    G->adj[v] = createNode(w, G->adj[v], weight); // vai para o inicio da lista
     G->nArcos++;
     return SUCCESS;
 }
 
-int insertEdge(Graph G, Vertex v, Vertex w) {
-    if (insertArc(G, v, w) == SUCCESS) {
-        if (insertArc(G, w, v) == SUCCESS)
+int insertEdge(Graph G, Vertex v, Vertex w, int weight) {
+    if (insertArc(G, v, w, weight) == SUCCESS) {
+        if (insertArc(G, w, v, weight) == SUCCESS)
             return SUCCESS;
     }
     return ERROR;
 }
 
-static Link createNode(Vertex w, Link next) {
+static Link createNode(Vertex w, Link next, int weight) {
     Link a = malloc(sizeof(*a));
     a->w = w;
     a->next = next;
+    a->weight = weight;
     return a;
 }
 
@@ -113,8 +115,34 @@ void printGraph(Graph G) {
   for (int i = 0; i < G->nVertices; i++) {
     printf("Vertex %d: ", i);
     for (Link p = G->adj[i]; p != NULL; p = p->next) {
-      printf(" %d > %d / ", i, p->w);
+      printf(" %d (%d) %d / ", i, p->weight, p->w);
     }
     printf("\n");
   }
+  printf("\n\n");
 }
+
+
+
+// EXERCÍCIOS:
+
+/* 
+    Implemente uma função que encontre o vértice adjacente a um vértice x com
+    aresta de menor peso em um grafo direcionado valorado, representado como
+    listas de adjacências.
+*/
+
+    Vertex menorPesoAdj(Graph G, Vertex x) {
+        Link p;
+        int peso = 99999;
+        Vertex vertex;
+
+        for (p = G->adj[x]; p != NULL; p = p->next) {
+            if (p->weight < peso) {
+                peso = p->weight;
+                vertex = p->w;
+            }
+        }
+
+        return vertex;
+    }
