@@ -35,10 +35,8 @@ void startDFS(Graph, Vertex);
 // BSF
 void startBSF(Graph, Vertex);
 void BSF(Graph, Vertex);
-// EXERCICIOS
-void newDFS(Graph, Vertex);
-void newDFSiterativo(Graph);
-static void printarVisited(Graph);
+// ORDENACAO TOPOLOGICA
+
 
 // constrói um grafo com vértices 0 1 ... v-1
 Graph initGraph(int v) {
@@ -201,50 +199,40 @@ void BSF(Graph G, Vertex x) {
 }
 
 
+//------------- ORDENAÇÃO TOPOLÓGICA -----------//
 
-
-// ---- EXERCICIOS ---
-
-
-// tentando implementar um novo DFS (busca por profundidade) do zero:
-
-void newDFS(Graph G, Vertex v) {
-    Link p;
-
-    for (p = G->adj[v]; p != NULL; p = p->next) {
-        if (p->visited == 0) {
-            printf("o vertice %d se liga ao vertice %d!!\n\n",v, p->w);
-            p->visited = 1;
-            newDFS(G, p->w);
-        }
-    }
+void topologicalSortDAG(Graph D) {
     
-}
+    Vertex *fila = malloc(D->nVertices * sizeof(Vertex));
+    int start = 0, end = 0;
+    // incidência
+    int *in = malloc(D->nVertices * sizeof(int));
 
-
-// implementado um DFS iterativo
-
-void newDFSiterativo(Graph G) {
-    Link p;
-    for (int i = 0; i < G->nVertices; i++) {
-
-        for (p = G->adj[i]; p != NULL; p = p->next) {
-            if (p->visited == 0) {
-                printf("o vertice %d se liga ao vertice %d!!\n\n",i, p->w);
-                p->visited = 1;
-            }
-        }
-
+    for (int v = 0; v < D->nVertices; v++) {
+        in[v] = 0;
     }
-}
 
-// FUNÇÃO PARA DEPURAÇÃO
-
-static void printarVisited(Graph G) {
-    printf("PRINT VISITED\n");
-    for (int i = 0; i < G->nVertices; i++) {
-        for (Link p = G->adj[i]; p != NULL; p = p->next) {
-            printf("%d - %d visited = %d\n", i, p->w, p->visited);
+    for (int v = 0; v < D->nVertices; v++) {
+        for(Link p = D->adj[v]; p != NULL; p = p->next) {
+            in[p->w]++;
         }
     }
+    for (int v = 0; v < D->nVertices; v++) {
+        // encontrar os elementos que nao tem incidência
+        // e coloca-los no inicio da fila
+        if(in[v] == 0)
+            fila[end++] = v;
+    }
+    while(end != start) {
+        Vertex x = fila[start++];
+        printf("%d ", x);
+        for (Link p = D->adj[x]; p != NULL; p = p->next) {
+            in[p->w]--;
+            if (in[p->w] == 0)
+                fila[end++] = p->w;
+        }
+    }
+    if (start != D->nVertices)
+        printf("Not a DAG.\n");
 }
+
