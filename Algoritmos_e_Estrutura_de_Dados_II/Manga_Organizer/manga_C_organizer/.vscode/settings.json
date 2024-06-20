@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "manga.h": "c",
+        "stdio.h": "c"
+    }
+}

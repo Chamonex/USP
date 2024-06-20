@@ -34,6 +34,7 @@ Manga manga;
 
 public:
 void addManga(Manga &manga, int rrn){
+    
     if (rrn > 0) {
         ofstream mangaFile ("mangas.txt", ios::app);
         if (mangaFile.is_open()){
