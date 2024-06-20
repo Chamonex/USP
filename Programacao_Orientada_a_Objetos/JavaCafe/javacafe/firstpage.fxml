@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" styleClass="background" stylesheets="@custom.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javacafe.Scene1controller">
+   <children>
+      <Pane layoutX="135.0" layoutY="30.0" prefHeight="326.0" prefWidth="315.0" AnchorPane.bottomAnchor="44.0" AnchorPane.leftAnchor="135.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="30.0">
+         <children>
+            <ImageView fitHeight="410.0" fitWidth="353.0" layoutX="-19.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@framebegin.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="82.0" layoutY="68.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@newbutton.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="82.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@loginbutton.png" />
+               </image>
+            </ImageView>
+            <JFXButton fx:id="newCafebutton" layoutX="94.0" layoutY="116.0" onAction="#newCafe" prefHeight="57.0" prefWidth="115.0" styleClass="buttonclick" stylesheets="@custom.css" text="Button" textFill="TRANSPARENT" />
+            <JFXButton fx:id="logCafebutton" layoutX="96.0" layoutY="207.0" onAction="#logCafe" prefHeight="54.0" prefWidth="115.0" styleClass="buttonclick" text="Button" textFill="TRANSPARENT" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

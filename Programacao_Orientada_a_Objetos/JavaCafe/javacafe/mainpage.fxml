@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="658.0" prefWidth="757.0" styleClass="background" stylesheets="@custom.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="-6.0" layoutY="-4.0" prefHeight="662.0" prefWidth="152.0" styleClass="upperpane" stylesheets="@custom.css">
+         <children>
+            <Pane prefHeight="124.0" prefWidth="152.0">
+               <children>
+                  <ImageView fitHeight="104.0" fitWidth="104.0" layoutX="20.0" layoutY="12.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@iconframeoriginal.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="85.0" fitWidth="82.0" layoutX="35.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@cafelogo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+            <Pane prefHeight="124.0" prefWidth="152.0">
+               <children>
+                  <JFXButton layoutX="20.0" text="Button" textFill="TRANSPARENT">
+                     <graphic>
+                        <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@orderbutton.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </Pane>
+            <Pane prefHeight="124.0" prefWidth="152.0">
+               <children>
+                  <Pane layoutX="-18.0" layoutY="-26.0" prefHeight="104.0" prefWidth="201.0">
+                     <children>
+                        <JFXButton layoutX="38.0" layoutY="-18.0" prefHeight="49.0" prefWidth="74.0" text="Button" textFill="TRANSPARENT">
+                           <graphic>
+                              <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@itemsbutton.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </Pane>
+                  <JFXButton layoutX="22.0" layoutY="35.0" prefHeight="66.0" prefWidth="82.0" textFill="TRANSPARENT">
+                     <graphic>
+                        <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@inventorybutton.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </Pane>
+            <Pane prefHeight="124.0" prefWidth="152.0">
+               <children>
+                  <Pane layoutY="39.0" prefHeight="72.0" prefWidth="152.0">
+                     <children>
+                        <JFXButton layoutX="23.0" layoutY="-47.0" prefHeight="49.0" prefWidth="74.0" text="Button" textFill="TRANSPARENT">
+                           <graphic>
+                              <ImageView fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@salesbutton.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </Pane>
+               </children>
+            </Pane>
+            <Pane prefHeight="78.0" prefWidth="152.0">
+               <children>
+                  <JFXButton layoutX="23.0" layoutY="-8.0" prefHeight="64.0" prefWidth="76.0" text="Button" textFill="TRANSPARENT">
+                     <graphic>
+                        <ImageView fitHeight="85.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@exitbutton.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </JFXButton>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+      <Label fx:id="cafeNameLabel" layoutX="156.0" layoutY="14.0" prefHeight="43.0" prefWidth="334.0" text="name">
+         <font>
+            <Font name="Superstar" size="29.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

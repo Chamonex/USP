@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="562.0" prefWidth="707.0" styleClass="background" stylesheets="@custom.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javacafe.Scene1controller">
+   <children>
+      <ImageView fitHeight="94.0" fitWidth="369.0" layoutX="169.0" layoutY="210.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@textnew.png" />
+         </image>
+      </ImageView>
+      <JFXButton fx:id="loginbutton" layoutX="290.0" layoutY="407.0" onAction="#login" prefHeight="84.0" prefWidth="99.0" styleClass="buttonclick" stylesheets="@custom.css" text="Button" textFill="TRANSPARENT">
+         <graphic>
+            <ImageView fitHeight="99.0" fitWidth="99.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@okaybutton.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </JFXButton>
+      <TextField fx:id="nameTextField" layoutX="199.0" layoutY="238.0" prefHeight="37.0" prefWidth="309.0" promptText="username:" styleClass="text-field" stylesheets="@custom.css">
+         <font>
+            <Font name="Superstar" size="18.0" />
+         </font>
+      </TextField>
+      <Label layoutX="228.0" layoutY="143.0" prefHeight="94.0" prefWidth="444.0" text="Welcome back!">
+         <font>
+            <Font name="Superstar" size="39.0" />
+         </font>
+      </Label>
+      <Pane prefHeight="127.0" prefWidth="707.0" styleClass="upperpane" stylesheets="@custom.css">
+         <children>
+            <ImageView fitHeight="128.0" fitWidth="127.0" layoutX="281.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@cafelogo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </Pane>
+      <ImageView fitHeight="94.0" fitWidth="369.0" layoutX="169.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@textnew.png" />
+         </image>
+      </ImageView>
+      <TextField fx:id="passwordField" layoutX="199.0" layoutY="342.0" prefHeight="37.0" prefWidth="309.0" promptText="password:" styleClass="text-field" stylesheets="@custom.css">
+         <font>
+            <Font name="Superstar" size="18.0" />
+         </font>
+      </TextField>
+      <ImageView fitHeight="81.0" fitWidth="91.0" layoutX="7.0" layoutY="474.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@houseicon.png" />
+         </image>
+      </ImageView>
+      <JFXButton fx:id="homebutton1" layoutX="14.0" layoutY="477.0" onAction="#firstPage" prefHeight="62.0" prefWidth="66.0" styleClass="buttonclick" text="Button" textFill="TRANSPARENT" />
+   </children>
+</AnchorPane>

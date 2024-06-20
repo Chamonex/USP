@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "studentstreamfilehandler.h": "c",
+        "student.h": "c"
+    }
+}
