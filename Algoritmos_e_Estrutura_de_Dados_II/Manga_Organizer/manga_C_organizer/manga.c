@@ -92,7 +92,7 @@ static Manga readMangaFromInput() {
 }
 
 static void writeMangaInFile(Manga manga, FILE* filePointer) {
-    printf("entrei");
+    printf("\nvou adicionar o manga %s nos registros\n", manga.title);
     fwrite(&manga, sizeof(Manga), 1, filePointer);
 
 }
@@ -100,11 +100,9 @@ static void writeMangaInFile(Manga manga, FILE* filePointer) {
 static int fileExist() {
     FILE *fileExist = fopen(REGISTERSFILE, "r");
     if (fileExist) {
-        printf("\n\no arquivo ja existe!\n\n");
         return 1;
     }
     else {
-        printf("\n\no arquivo nao existe!\n\n");
         return 0;
     }
     fclose(fileExist);
@@ -113,11 +111,9 @@ static int fileExist() {
 static int PFfileExist() {
     FILE *fileExist = fopen(PRIMARYINDEXFILE, "r");
     if (fileExist) {
-        printf("\n\no arquivo de index ja existe!\n\n");
         return 1;
     }
     else {
-        printf("\n\no arquivo de index nao existe!\n\n");
         return 0;
     }
     fclose(fileExist);
@@ -144,29 +140,33 @@ static int PFgetLocation(char* isbn, int n) {
 }
 
 static void PFwriteIndex(FILE* writer, PrimaryIndex pi, int n) {
-    printf("COMPLEX ADD");
+
+    printf("\nvou adicionar o pi %s %d na file\n", pi.isbn, pi.offset);
     FILE *reader = fopen(PRIMARYINDEXFILE, "r");
     PrimaryIndex *array = (PrimaryIndex*)malloc(n * sizeof(PrimaryIndex));
     int x = 0;
+    printf("\ncriei o array para ordenar\n");
     while(fread(&array[x], sizeof(PrimaryIndex), 1, reader)) {
+        printf("li do arquivo o array %d: %s %d. ", x, array[x].isbn, array[x].offset);
         if (strcmp(array[x].isbn, pi.isbn) > 0) {
+            printf("o isbn do arquivo %d: %s, e menor que o do meu: %s", x, array[x].isbn, pi.isbn);
             break;
         }
         x++;
     }
-
+    PrimaryIndex save = array[x];
     array[x] = pi;
-    
+    x++;
+
     while(x < n) {
-        strcmp(array[x].isbn, pi.isbn);
+        array[x] = save;
         x++;
+        if (x == n) {
+            break;
+        }
+        save = array[x];
     }
 
-    // tenho todos no array
-
-    for (int i = 0; i < n; i++) {
-        printf("%d\na", array[i].offset);
-    }
     fclose(reader);
 
 }
@@ -201,14 +201,12 @@ void addManga(int n) {
         printManga(manga);
         FILE *fp = fopen(REGISTERSFILE, "a");
         writeMangaInFile(manga, fp);
-        printf("\n\nTESTE %s\n\n", manga.isbn);
         fclose(fp);
     }
     else {
         printManga(manga);
         FILE *fp = fopen(REGISTERSFILE, "w");
         writeMangaInFile(manga, fp);
-        printf("TESTEEEEEEEEE\n\n");
         fclose(fp);
     }
     // adicionar ao arquivo de indices primarios:
@@ -216,18 +214,23 @@ void addManga(int n) {
     PrimaryIndex pi;
     strcpy(pi.isbn, manga.isbn);
     pi.offset = n * 180;
-        
+    printf("criei o pi: %s %d\n\n", pi.isbn, pi.offset);
+
     if (PFfileExist()) {
         // vai receber PI
+        printf("chequei' que o index file exste\n");
         FILE *fp = fopen(PRIMARYINDEXFILE, "a");
         PFwriteIndex(fp, pi, n);
+
         fclose(fp);
     }
     else {
+        printf("chequei que o index file NAO exste\n");
         FILE *fp = fopen(PRIMARYINDEXFILE, "w");
         PFsimpleWriteIndex(fp, pi, n);
         fclose(fp);
     }
+    printf("salvei index\n");
     
 }
 
