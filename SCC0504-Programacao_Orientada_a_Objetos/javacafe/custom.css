@@ -1,0 +1,20 @@
+.text-field {
+    -fx-background-color: white , white , white;
+}
+
+.background{
+    -fx-background-color: #c7bfe3;
+}
+
+.upperpane {
+    -fx-background-color: #9b8dc9;
+}
+
+.buttonclick {
+    -fx-cursor: hand;
+}
+
+.text-fieldorder{
+    -fx-background-color: #b098d6;
+    -fx-text-fill: white;
+}

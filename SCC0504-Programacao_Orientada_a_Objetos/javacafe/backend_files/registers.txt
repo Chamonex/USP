@@ -1,0 +1,9 @@
+GABICAFE|123
+gabicafe|123
+gabicafe|345
+Ahora|12345566
+Lingo|123123
+ttt|aaa
+as|as
+ttt|aaa
+1|1

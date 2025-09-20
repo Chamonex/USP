@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "pilha.h": "c",
+        "fila.h": "c"
+    }
+}
