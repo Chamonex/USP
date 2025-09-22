@@ -9,6 +9,8 @@
 Nesse contexto, o objetivo principal
 ´e determinar o tamanho dos lotes de produ¸c˜ao e o instante de tempo de
 produ¸c˜ao de modo a suprir uma certa demanda em um horizonte de planejamento finito
+
+
 ## Exemplo Básico de Programação Inteira Mista com PySCIPOpt
 
 ### Descrição do Problema
